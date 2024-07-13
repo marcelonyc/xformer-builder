@@ -14,7 +14,7 @@ Questions: [Ask Here](https://github.com/marcelonyc/xformer-builder/labels/quest
 
 To get started with Xformer Builder, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/ametricx/research/xformer-builder.git`
+1. Clone the repository: `git clone https://github.com/marcelonyc/xformer-builder`
 2. Run setup.sh 
     - Requires Python > 3.10 
 3. cd to the `coding` directory
