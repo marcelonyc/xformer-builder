@@ -51,7 +51,6 @@ Contributions are welcome! If you would like to contribute to Xformer Builder, p
 4. Push your changes to your forked repository.
 5. Submit a pull request to the main repository.
 
-## Screensghots
 ## Screenshots
 
 Here are some screenshots of the Xformer Builder application:
