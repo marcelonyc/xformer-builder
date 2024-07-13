@@ -528,9 +528,20 @@ def save_all_code(
         saved_msg = "Syntax Error. Review list for highlighted errors"
 
     if ctx.triggered_id != editor_test_link:
+        for code in range(0, len(code_list)):
+            if code_list[code] is None:
+                code_list[code] = None
+            else:
+                code_list[code] = base64.b64encode(
+                    bytes(code_list[code], "utf-8")
+                )
+
         # open(f"/tmp/{xformer_name}.json", "w").write(str(return_values))
         # Set up a function here to save the xformers
-        print(return_values)
+        # TODO
+        # A data class to manage return values
+        # It is hard to know what is in return_values :(
+        print(return_values, code_list)
 
     return return_values + (
         True,
