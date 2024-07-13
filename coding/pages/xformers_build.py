@@ -270,10 +270,7 @@ def layout(new_xformer: bool = True):
         id="xformers-editor-div",
     )
 
-    sticky_top = html.Div(
-        "Top dog", style={"position": "sticky", "top": 0, "zIndex": 2000}
-    )
-    return html.Div([sticky_top, editor_div_body])
+    return html.Div([editor_div_body])
 
 
 editor_callbacks.load_editor_callback(
@@ -355,9 +352,6 @@ def auto_save_all_code(
         "target_type": target_type_list,
         "target_column": target_column_list,
     }
-
-    # print("called it", xformers_definition)
-    # return True, False
 
 
 @callback(
