@@ -1,6 +1,7 @@
 coding/assets/src-noconflict/
 *.py[cod]
 __pycache__/
+.DS_Store
 *.log
 *.bak
 *.tmp
