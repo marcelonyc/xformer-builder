@@ -7,7 +7,18 @@ import python_modules.code_validator.code_validator as code_validator
 def generate_xformers_from_file(
     type_sample, editor_button, editor_code
 ) -> Dict:
+    """
+    Generate transformers from a file.
 
+    Args:
+        type_sample (list): A list of dictionaries representing the type sample.
+        editor_button (str): The editor button.
+        editor_code (str): The editor code.
+
+    Returns:
+        list: A list of xformer rows.
+
+    """
     Xformers = {}
     column_index = 0
     for column in type_sample:
@@ -40,6 +51,19 @@ def xformer_edit_row_build(
     editor_button: str = "editor-button",
     editor_code: str = "editor-code",
 ):
+    """
+    Builds a row structure for editing a transformer.
+
+    Args:
+        xformer (str): The name of the transformer.
+        xformer_dict (Dict): A dictionary containing information about the transformer.
+        editor_button (str, optional): The ID of the editor button. Defaults to "editor-button".
+        editor_code (str, optional): The ID of the editor code. Defaults to "editor-code".
+
+    Returns:
+        dbc.AccordionItem: The row structure for editing the transformer.
+    """
+
     column_row = xformer_dict["column_index"]
     row_columns = dbc.Row(
         [

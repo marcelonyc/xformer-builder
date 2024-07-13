@@ -50,11 +50,32 @@ editor_saved_status_msg = "editor-saved-status-msg"
 
 
 def layout(new_xformer: bool = True):
+    """
+    Generates the layout for the transformer editor page.
 
-    # xformer_rows = xformers_utils.get_xformers(editor_button, editor_code)
+    Args:
+        new_xformer (bool, optional): Indicates whether a new transformer is being created. Defaults to True.
 
-    # num_of_xformers = len(xformer_rows)
-    # # Hide save button if there are no xformers
+    Returns:
+        html.Div: The generated layout for the transformer editor page.
+    """
+    disable_save_all = False
+    controls_div = html.Div(
+        id="editor-controls-div",
+        style={
+            "margin": "auto",
+            "padding": "20px",
+            "position": "sticky",
+            "top": "0",
+            "zIndex": "1000",
+            "border": "10px",
+        },
+    )
+    # Rest of the code...
+
+
+def layout(new_xformer: bool = True):
+
     disable_save_all = False
     controls_div = html.Div(
         id="editor-controls-div",
@@ -303,6 +324,22 @@ editor_callbacks.save_editor_callback(
     prevent_initial_call=True,
 )
 def upload_sample_data(contents, filename):
+    """
+    Uploads sample data and generates xformers based on the data.
+
+    Args:
+        contents (str): The contents of the file to be uploaded.
+        filename (str): The name of the file.
+
+    Returns:
+        tuple: A tuple containing the following elements:
+            - bool: Indicates if the upload was successful (True) or not (False).
+            - None: Placeholder for an error message (not used in this implementation).
+            - None: Placeholder for additional information (not used in this implementation).
+            - list: A list of xformers generated from the sample data.
+            - bool: Indicates if the upload was successful (True) or not (False).
+            - bool: Indicates if there was an error during the upload (True) or not (False).
+    """
     content_type, content_string = contents.split(",")
     decoded = base64.b64decode(content_string)
     read_csv = pd.read_csv(io.StringIO(decoded.decode("utf-8")), nrows=3)
@@ -311,7 +348,6 @@ def upload_sample_data(contents, filename):
     type_sample = []
     for key in sample[0]:
         col_type = "string"
-        # print(type(columns[key]))
         if type(columns[key]) != np.dtypes.ObjectDType:
             col_type = "number"
         type_sample.append(
@@ -339,7 +375,20 @@ def auto_save_all_code(
     target_type_list,
     target_column_list,
 ):
+    """
+    Auto saves all code by encoding it and storing it in a dictionary.
 
+    Args:
+        save_interval (int): The interval at which the code should be saved.
+        editor_buttons (str): The source column.
+        code_list (list): The list of code snippets to be saved.
+        source_type_list (list): The list of source types.
+        target_type_list (list): The list of target types.
+        target_column_list (list): The list of target columns.
+
+    Returns:
+        None
+    """
     for code in range(0, len(code_list)):
         if code_list[code] is None:
             code_list[code] = None
@@ -404,7 +453,34 @@ def save_all_code(
     column_status,
     xformer_name,
 ):
+    """
+    Save all code and perform syntax check.
 
+    Args:
+        n_clicks (int): Number of clicks.
+        editort_test_n_clicks (int): Number of clicks for editor test.
+        editor_button (list): List of editor buttons.
+        code_list (list): List of code snippets.
+        sample_data_list (list): List of sample data.
+        target_data_list (list): List of target data.
+        target_data_class (str): Target data class.
+        accordion_class (str): Accordion class.
+        column_status (str): Column status.
+        xformer_name (str): Name of the transformer.
+
+    Returns:
+        tuple: A tuple containing the following values:
+            - target_data_list (list): List of target data.
+            - target_data_class (str): Target data class.
+            - accordion_class (str): Accordion class.
+            - column_status (str): Column status.
+            - btn_class (str): Button class.
+            - column_status (str): Column status.
+            - is_open (bool): Flag indicating if the transformer is open.
+            - is_saved (bool): Flag indicating if the transformer is saved.
+            - saved_msg (str): Message indicating the save status.
+            - is_saved (bool): Flag indicating if the transformer is saved.
+    """
     if xformer_name is None:
         return (
             target_data_list,
@@ -473,6 +549,18 @@ def add_column_selection(
     n_clicks,
     editor_buttons,
 ):
+    """
+    Adds a column selection dropdown to the page.
+
+    Parameters:
+    - n_clicks (int): The number of times the button has been clicked.
+    - editor_buttons (list): A list of editor buttons.
+
+    Returns:
+    - select_div (html.Div): The column selection dropdown wrapped in an html.Div.
+    - True (bool): Indicates that the function executed successfully.
+    """
+
     if n_clicks is None:
         return [], False
 
@@ -515,6 +603,21 @@ def add_column(
     column_sample,
     modal_state,
 ):
+    """
+    Add a new column to the editor.
+
+    Args:
+        n_clicks (int): The number of times the button has been clicked.
+        column_name (str): The name of the column to be added.
+        editor_buttons (list): The list of existing column names in the editor.
+        source_type (list): The list of source types for each column.
+        column_sample (list): The list of column samples.
+        modal_state (bool): The state of the modal.
+
+    Returns:
+        tuple: A tuple containing the updated accordion and the modal state.
+
+    """
     if column_name is None:
         return [], modal_state
 

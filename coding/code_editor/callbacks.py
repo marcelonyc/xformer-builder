@@ -11,6 +11,20 @@ def load_editor_callback(
     editor_code: str,
     editor_title_h2: str,
 ):
+    """
+    Callback function to load the editor.
+
+    Args:
+        editor_div (str): The ID of the editor div.
+        editor_index (str): The ID of the editor index.
+        editor_modal (str): The ID of the editor modal.
+        editor_button (str): The ID of the editor button.
+        editor_code (str): The ID of the editor code.
+        editor_title_h2 (str): The ID of the editor title h2.
+
+    Returns:
+        list: A list of output values for the specified outputs.
+    """
 
     clientside_callback(
         """
@@ -38,7 +52,16 @@ def save_editor_callback(
     editor_modal: str,
     editor_save_intervals: str = "editor-save-intervals",
 ):
+    """
+    Callback function that saves the code from the editor.
 
+    Args:
+        editor_div (str): The ID of the editor div.
+        editor_index (str): The ID of the editor index.
+        editor_code (str): The ID of the editor code.
+        editor_modal (str): The ID of the editor modal.
+        editor_save_intervals (str, optional): The ID of the editor save intervals. Defaults to "editor-save-intervals".
+    """
     clientside_callback(
         """
         function (n_clicks, editor_index, code) {
