@@ -1,1 +1,10 @@
 coding/assets/src-noconflict/
+*.py[cod]
+__pycache__/
+*.log
+*.bak
+*.tmp
+*.old
+*.orig
+*.rej
+

@@ -157,43 +157,6 @@ def xformer_edit_row_build(
     )
 
 
-def get_xformer_list():
-    return [
-        {
-            "mixformer": {
-                "code": [b"", None, None, None, None, None, None],
-                "source_type": [
-                    "string",
-                    "number",
-                    "number",
-                    "number",
-                    "number",
-                    "number",
-                    "number",
-                ],
-                "target_type": [
-                    "string",
-                    "number",
-                    "number",
-                    "number",
-                    "number",
-                    "number",
-                    "number",
-                ],
-                "target_column": [
-                    "ID",
-                    "Datasources count",
-                    "Models count",
-                    "Datasets count",
-                    "Dashboards count",
-                    "Active monitors count",
-                    "Disabled monitors count",
-                ],
-            }
-        }
-    ]
-
-
 def xformer_validator(
     editor_button,
     code_list,
