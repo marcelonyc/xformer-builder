@@ -50,6 +50,17 @@ Contributions are welcome! If you would like to contribute to Xformer Builder, p
 4. Push your changes to your forked repository.
 5. Submit a pull request to the main repository.
 
+## Screensghots
+## Screenshots
+
+Here are some screenshots of the Xformer Builder application:
+
+![Screenshot 1](/coding/assets/images/Screenshot%202024-07-13%20at%2012.52.17 PM.png)
+---
+![Screenshot 1](/coding/assets/images/Screenshot%202024-07-13%20at%201.08.00 PM.png)
+
+
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
