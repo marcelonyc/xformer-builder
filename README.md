@@ -31,7 +31,7 @@ To get started with Xformer Builder, follow these steps:
         - `data.split("-")`
         - `data * columns['other_data']`
 3. Test transformations: Once the transformers are created, click on the "Test" button to execute the transformations.
-    - The result displays on the column's row. You need to expand it.
+    - The result displays on the column's row. You need to [expand](#expand-row-to-see-transformation-resutls) it.
     - Any errors will display in the column's row
 4. When you are finished, Name the transformer
 5. Test all the transformers from the navigation bar
@@ -58,7 +58,10 @@ Here are some screenshots of the Xformer Builder application:
 ![Screenshot 1](/coding/assets/images/Screenshot%202024-07-13%20at%2012.52.17 PM.png)
 ---
 ![Screenshot 1](/coding/assets/images/Screenshot%202024-07-13%20at%201.08.00 PM.png)
-
+---
+### Expand row to see transformation resutls
+<a name="expandit"></a>
+![Screenshot 1](/coding/assets/images/Screenshot%202024-07-13%20at%202.56.21 PM.png)
 
 
 ## License
