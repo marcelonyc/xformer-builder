@@ -2,6 +2,7 @@ from typing import Dict
 import dash_bootstrap_components as dbc
 from dash import html, ctx
 import python_modules.code_validator.code_validator as code_validator
+import config.editor_config as editor_config
 
 
 def generate_xformers_from_file(
@@ -184,7 +185,7 @@ def xformer_edit_row_build(
 def xformer_validator(
     editor_button,
     code_list,
-    editor_index,
+    editor_element_index,
     sample_data_list,
     target_data_list,
     target_data_class,
@@ -197,7 +198,7 @@ def xformer_validator(
     Args:
         editor_button (list): List of editor buttons.
         code_list (list): List of code snippets.
-        editor_index (int): Index of the current editor.
+        editor_element_index (int): Index of the current editor.
         sample_data_list (list): List of sample data.
         target_data_list (list): List of target data.
         target_data_class (list): List of target data classes.
@@ -213,7 +214,10 @@ def xformer_validator(
     for _value in editor_button:
         other_values[_value] = sample_data_list[editor_button.index(_value)]
 
-    if code_list[editor_index] == "" or code_list[editor_index] is None:
+    if (
+        code_list[editor_element_index] == ""
+        or code_list[editor_element_index] is None
+    ):
         return (
             target_data_list,
             target_data_class,
@@ -223,27 +227,31 @@ def xformer_validator(
             column_status,
         )
     exec_results = code_validator.safe_execute(
-        code_list[editor_index],
-        sample_data_list[editor_index],
+        code_list[editor_element_index],
+        sample_data_list[editor_element_index],
         other_values,
     )
 
     editor_status_msg = "Transformers with errors"
     classes_failed = "btn-danger text-white"
     classes_sucess = "btn-success text-white"
-    if exec_results["status"] != "success":
-        target_data_list[editor_index] = exec_results["result"]
-        target_data_class[editor_index] = "bg-danger"
-        accordion_class[editor_index] = "border-danger"
-        column_status[editor_index] = "failed"
+    if exec_results["status"] != editor_config.EditorStatus.TEST_SUCCESS:
+        target_data_list[editor_element_index] = exec_results["result"]
+        target_data_class[editor_element_index] = "bg-danger"
+        accordion_class[editor_element_index] = "border-danger"
+        column_status[editor_element_index] = (
+            editor_config.EditorStatus.TEST_FAILED
+        )
         editor_status_msg = editor_status_msg
         editor_status_class = classes_failed
     else:
-        target_data_list[editor_index] = exec_results["result"]
-        target_data_class[editor_index] = "bg-success"
-        accordion_class[editor_index] = "border-success"
-        column_status[editor_index] = "success"
-        if "failed" in column_status:
+        target_data_list[editor_element_index] = exec_results["result"]
+        target_data_class[editor_element_index] = "bg-success"
+        accordion_class[editor_element_index] = "border-success"
+        column_status[editor_element_index] = (
+            editor_config.EditorStatus.TEST_SUCCESS
+        )
+        if editor_config.EditorStatus.TEST_FAILED in column_status:
             editor_status_msg = editor_status_msg
             editor_status_class = classes_failed
         else:
