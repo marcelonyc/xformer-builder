@@ -22,12 +22,22 @@ import code_editor.editor as editor_utils
 import base64
 from utils import xformers_build as xformers_utils
 from utils.xformers_build import xformer_validator
+import config.editor_config as editor_config
 
 register_page(__name__, name="Trial", top_nav=True, path="/")
 
 # Element IDs
+# Keep a list in variables to avoid typos
+# TODO
+# This should be moved to a config file
 editor_div = "editor"  # Div name for rendering editor
-editor_index = "editor-index"  # Place holder to store index of current editor
+
+# Place holder to store index of current editor. This index correlates to
+# All the index elements in the Accordion
+# If you create a call back the uses the editor's input, you must use this
+# to know which index is being edited
+editor_element_index = "editor-index"
+
 editor_modal = "editor-modal"  # Modal to display editor activity
 editor_button = "editor-button"  # Button to open editor. Indexed ID (multiple)
 editor_code = "editor-code"  # Store code of each editor. Indexed ID (multiple)
@@ -46,7 +56,7 @@ editor_alerts_modal = "editor-alerts-model"
 editor_alerts_modal_body = "editor-alerts-modal-body"
 editor_saved_status_msg = "editor-saved-status-msg"
 
-# Button to save code. Uses editor_index to identify editor
+# Button to save code. Uses editor_element_index to identify editor
 
 
 def layout(new_xformer: bool = True):
@@ -213,7 +223,7 @@ def layout(new_xformer: bool = True):
     )
     hidden_row = dbc.Row(
         [
-            dbc.Input(id=editor_index, type="hidden"),
+            dbc.Input(id=editor_element_index, type="hidden"),
             dbc.Alert(
                 "Code Saved", id="code-saved-success-window", is_open=False
             ),
@@ -296,7 +306,7 @@ def layout(new_xformer: bool = True):
 
 editor_callbacks.load_editor_callback(
     editor_div,
-    editor_index,
+    editor_element_index,
     editor_modal,
     editor_button,
     editor_code,
@@ -305,7 +315,7 @@ editor_callbacks.load_editor_callback(
 
 editor_callbacks.save_editor_callback(
     editor_div,
-    editor_index,
+    editor_element_index,
     editor_code,
     editor_modal,
     editor_save_intervals=editor_save_intervals,
@@ -389,6 +399,11 @@ def auto_save_all_code(
     Returns:
         None
     """
+    # TODO
+    # This function should save the code during the interval to prevent
+    # loss of data in case of a crash
+    # Keep track of Testing status. we do not want code approved if
+    # it has not been tested
     for code in range(0, len(code_list)):
         if code_list[code] is None:
             code_list[code] = None
@@ -494,16 +509,16 @@ def save_all_code(
             "Transformer Name Required",
         )
 
-    editor_index = 0
+    editor_element_index = 0
     return_values = ()
-    syntax_status = "success"
+    syntax_status = editor_config.EditorStatus.TEST_SUCCESS
     for _col in editor_button:
         syntax_check = test_code(
             n_clicks,
             0,
             editor_button,
             code_list,
-            editor_index,
+            editor_element_index,
             sample_data_list,
             target_data_list,
             target_data_class,
@@ -512,19 +527,20 @@ def save_all_code(
         )
 
         if (
-            syntax_check[5][editor_index] == "failed"
-            and syntax_status == "success"
+            syntax_check[5][editor_element_index]
+            == editor_config.EditorStatus.TEST_FAILED
+            and syntax_status == editor_config.EditorStatus.TEST_SUCCESS
         ):
-            syntax_status = "failed"
+            syntax_status = editor_config.EditorStatus.TEST_FAILED
             return_values = syntax_check
 
         if return_values == ():
             return_values = syntax_check
 
-        editor_index += 1
+        editor_element_index += 1
 
     saved_msg = "Saved Successfully"
-    if syntax_status == "failed":
+    if syntax_status == editor_config.EditorStatus.TEST_FAILED:
         saved_msg = "Syntax Error. Review list for highlighted errors"
 
     if ctx.triggered_id != editor_test_link:
@@ -678,7 +694,7 @@ def add_column(
     Input(editor_close_button, "n_clicks"),
     State({"type": editor_button, "index": ALL}, "value"),
     State({"type": editor_code, "index": ALL}, "value"),
-    State(editor_index, "value"),
+    State(editor_element_index, "value"),
     State({"type": "column-sample-data", "index": ALL}, "value"),
     State({"type": "column-target-data", "index": ALL}, "value"),
     State({"type": "column-target-data", "index": ALL}, "class_name"),
@@ -691,7 +707,7 @@ def test_code(
     close_n_clicks,
     editor_button,
     code_list,
-    editor_index,
+    editor_element_index,
     sample_data_list,
     target_data_list,
     target_data_class,
@@ -706,7 +722,7 @@ def test_code(
     - close_n_clicks (int): Number of times the close button is clicked.
     - editor_button (str): The button used to trigger the editor.
     - code_list (list): List of code snippets.
-    - editor_index (int): Index of the editor.
+    - editor_element_index (int): Index of the editor.
     - sample_data_list (list): List of sample data.
     - target_data_list (list): List of target data.
     - target_data_class (str): Class of the target data.
@@ -719,7 +735,7 @@ def test_code(
     return_values = xformer_validator(
         editor_button,
         code_list,
-        editor_index,
+        editor_element_index,
         sample_data_list,
         target_data_list,
         target_data_class,
@@ -729,8 +745,9 @@ def test_code(
     is_hide_editor = (False,)
     if ctx.triggered_id == editor_close_button:
         if (
-            return_values[5][editor_index] != "success"
-            and return_values[5][editor_index] is not None
+            return_values[5][editor_element_index]
+            != editor_config.EditorStatus.TEST_SUCCESS
+            and return_values[5][editor_element_index] is not None
         ):
             is_hide_editor = (False,)
         else:
