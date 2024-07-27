@@ -27,7 +27,7 @@ app.index_string = f"""
 <html>
     <head>
         {{%metas%}}
-        <title>Test</title>
+        <title>Data Transformer</title>
         {{%favicon%}}
         {{%css%}}
     </head>
@@ -44,4 +44,4 @@ app.index_string = f"""
 
 # Run the application
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

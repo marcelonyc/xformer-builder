@@ -3,6 +3,7 @@ import dash_bootstrap_components as dbc
 from dash import html, ctx
 import python_modules.code_validator.code_validator as code_validator
 import config.editor_config as editor_config
+from dataclasses import dataclass, field
 
 
 def generate_xformers_from_file(
@@ -182,87 +183,237 @@ def xformer_edit_row_build(
     )
 
 
-def xformer_validator(
-    editor_button,
-    code_list,
-    editor_element_index,
-    sample_data_list,
-    target_data_list,
-    target_data_class,
-    accordion_class,
-    column_status,
-):
-    """
-    Validates and executes transformers based on the provided inputs.
+class TestCode:
 
-    Args:
-        editor_button (list): List of editor buttons.
-        code_list (list): List of code snippets.
-        editor_element_index (int): Index of the current editor.
-        sample_data_list (list): List of sample data.
-        target_data_list (list): List of target data.
-        target_data_class (list): List of target data classes.
-        accordion_class (list): List of accordion classes.
-        column_status (list): List of column statuses.
-
-    Returns:
-        tuple: A tuple containing the updated target_data_list, target_data_class,
-        accordion_class, editor_status_msg, editor_status_class, and column_status.
-    """
-
-    other_values = {}
-    for _value in editor_button:
-        other_values[_value] = sample_data_list[editor_button.index(_value)]
-
-    if (
-        code_list[editor_element_index] == ""
-        or code_list[editor_element_index] is None
+    def __init__(
+        self,
+        test_n_clicks: int,
+        close_n_clicks: int,
+        editor_button: list,
+        code_list: list,
+        editor_element_index: int,
+        sample_data_list: list,
+        target_data_list: list,
+        target_data_class: str,
+        accordion_class: str,
+        column_status: str,
     ):
-        return (
-            target_data_list,
-            target_data_class,
-            accordion_class,
-            "Transformers are ready",
-            "btn-success text-white",
-            column_status,
-        )
-    exec_results = code_validator.safe_execute(
-        code_list[editor_element_index],
-        sample_data_list[editor_element_index],
-        other_values,
-    )
+        self.editor_button = editor_button
+        self.code_list = code_list
+        self.editor_element_index = editor_element_index
+        self.sample_data_list = sample_data_list
+        self.target_data_list = target_data_list
+        self.target_data_class = target_data_class
+        self.accordion_class = accordion_class
+        self.column_status = column_status
 
-    editor_status_msg = "Transformers with errors"
-    classes_failed = "btn-danger text-white"
-    classes_sucess = "btn-success text-white"
-    if exec_results["status"] != editor_config.EditorStatus.TEST_SUCCESS:
-        target_data_list[editor_element_index] = exec_results["result"]
-        target_data_class[editor_element_index] = "bg-danger"
-        accordion_class[editor_element_index] = "border-danger"
-        column_status[editor_element_index] = (
-            editor_config.EditorStatus.TEST_FAILED
+    def validate(self):
+        other_values = {}
+        for _value in self.editor_button:
+            other_values[_value] = self.sample_data_list[
+                self.editor_button.index(_value)
+            ]
+
+        if (
+            self.code_list[self.editor_element_index] == ""
+            or self.code_list[self.editor_element_index] is None
+        ):
+            return (
+                self.target_data_list,
+                self.target_data_class,
+                self.accordion_class,
+                "Transformers are ready",
+                "btn-success text-white",
+                self.column_status,
+            )
+        exec_results = code_validator.safe_execute(
+            self.code_list[self.editor_element_index],
+            self.sample_data_list[self.editor_element_index],
+            other_values,
         )
-        editor_status_msg = editor_status_msg
-        editor_status_class = classes_failed
-    else:
-        target_data_list[editor_element_index] = exec_results["result"]
-        target_data_class[editor_element_index] = "bg-success"
-        accordion_class[editor_element_index] = "border-success"
-        column_status[editor_element_index] = (
-            editor_config.EditorStatus.TEST_SUCCESS
-        )
-        if editor_config.EditorStatus.TEST_FAILED in column_status:
+
+        editor_status_msg = "Transformers with errors"
+        classes_failed = "btn-danger text-white"
+        classes_sucess = "btn-success text-white"
+        if exec_results["status"] != editor_config.EditorStatus.TEST_SUCCESS:
+            self.target_data_list[self.editor_element_index] = exec_results[
+                "result"
+            ]
+            self.target_data_class[self.editor_element_index] = "bg-danger"
+            self.accordion_class[self.editor_element_index] = "border-danger"
+            self.column_status[self.editor_element_index] = (
+                editor_config.EditorStatus.TEST_FAILED
+            )
             editor_status_msg = editor_status_msg
             editor_status_class = classes_failed
         else:
-            editor_status_msg = "Transformers are ready"
-            editor_status_class = classes_sucess
+            self.target_data_list[self.editor_element_index] = exec_results[
+                "result"
+            ]
+            self.target_data_class[self.editor_element_index] = "bg-success"
+            self.accordion_class[self.editor_element_index] = "border-success"
+            self.column_status[self.editor_element_index] = (
+                editor_config.EditorStatus.TEST_SUCCESS
+            )
+            if editor_config.EditorStatus.TEST_FAILED in self.column_status:
+                editor_status_msg = editor_status_msg
+                editor_status_class = classes_failed
+            else:
+                editor_status_msg = "Transformers are ready"
+                editor_status_class = classes_sucess
 
-    return (
+        return (
+            self.target_data_list,
+            self.target_data_class,
+            self.accordion_class,
+            editor_status_msg,
+            editor_status_class,
+            self.column_status,
+        )
+
+
+@dataclass
+class XformerValidatorReturn:
+
+    # Valid Values
+    transformer_status_ready = "Transformers are ready"
+    transformer_status_error = "Transformers with errors"
+    button_class_success = "btn-success text-white"
+    button_class_failed = "btn-danger text-white"
+    column_status_success = "success"
+    column_status_failed = "failed"
+    target_data_class_error = "bg-danger"
+    target_data_class_success = "bg-success"
+    accordion_class_error = "border-danger"
+    accordion_class_success = "border-success"
+    editor_classes_failed = "btn-danger text-white"
+    editor_classes_sucess = "btn-success text-white"
+
+    target_data_list: list = field(default_factory=list)
+    target_data_class: str = None
+    accordion_class: str = None
+    transformer_status: str = transformer_status_ready
+    button_class: str = button_class_success
+    column_status: str = None
+
+    def return_values_in_tuple(self):
+        return (
+            self.target_data_list,
+            self.target_data_class,
+            self.accordion_class,
+            self.transformer_status,
+            self.button_class,
+            self.column_status,
+        )
+
+
+class XformerValidator:
+
+    def __init__(
+        self,
+        editor_button: str,
+        code_list,
+        editor_element_index,
+        sample_data_list,
         target_data_list,
         target_data_class,
         accordion_class,
-        editor_status_msg,
-        editor_status_class,
-        column_status,
-    )
+        column_status: str = None,
+    ):
+        self.editor_button = editor_button
+        self.code_list = code_list
+        self.editor_element_index = editor_element_index
+        self.sample_data_list = sample_data_list
+        self.target_data_list = target_data_list
+        self.target_data_class = target_data_class
+        self.accordion_class = accordion_class
+        self.column_status = column_status
+        self.editor_status_msg = "Transformers with errors"
+        self.editor_status_class = "btn-danger text-white"
+
+    def validate(self):
+
+        return_values = XformerValidatorReturn()
+
+        other_values = {}
+        for _value in self.editor_button:
+            other_values[_value] = self.sample_data_list[
+                self.editor_button.index(_value)
+            ]
+
+        if (
+            self.code_list[self.editor_element_index] == ""
+            or self.code_list[self.editor_element_index] is None
+        ):
+            return_values.target_data_list = self.target_data_list
+            return_values.target_data_class = self.target_data_class
+            return_values.accordion_class = self.accordion_class
+            return_values.transformer_status = (
+                return_values.transformer_status_ready
+            )
+            return_values.button_class = return_values.button_class_success
+            return_values.column_status = self.column_status
+            return return_values.return_values_in_tuple()
+
+        exec_results = code_validator.safe_execute(
+            self.code_list[self.editor_element_index],
+            self.sample_data_list[self.editor_element_index],
+            other_values,
+        )
+
+        return_values.transformer_status = (
+            return_values.transformer_status_error
+        )
+        if exec_results["status"] != editor_config.EditorStatus.TEST_SUCCESS:
+            self.target_data_list[self.editor_element_index] = exec_results[
+                "result"
+            ]
+            self.target_data_class[self.editor_element_index] = (
+                return_values.target_data_class_error
+            )
+            self.accordion_class[self.editor_element_index] = (
+                return_values.accordion_class_error
+            )
+            self.column_status[self.editor_element_index] = (
+                editor_config.EditorStatus.TEST_FAILED
+            )
+            self.editor_status_msg = return_values.transformer_status_error
+            self.editor_status_class = return_values.editor_classes_failed
+        else:
+            self.target_data_list[self.editor_element_index] = exec_results[
+                "result"
+            ]
+            self.target_data_class[self.editor_element_index] = (
+                return_values.target_data_class_success
+            )
+            self.accordion_class[self.editor_element_index] = (
+                return_values.accordion_class_success
+            )
+            self.column_status[self.editor_element_index] = (
+                editor_config.EditorStatus.TEST_SUCCESS
+            )
+            if editor_config.EditorStatus.TEST_FAILED in self.column_status:
+                self.editor_status_msg = return_values.transformer_status_error
+                self.editor_status_class = return_values.button_class_failed
+            else:
+                self.editor_status_msg = return_values.transformer_status_ready
+                self.editor_status_class = return_values.editor_classes_sucess
+
+    def return_values_in_tuple(self):
+        """
+        Returns a tuple containing the following values:
+        - target_data_list: The target data list.
+        - target_data_class: The target data class.
+        - accordion_class: The accordion class.
+        - editor_status_msg: The editor status message.
+        - editor_status_class: The editor status class.
+        - column_status: The column status.
+        """
+        return (
+            self.target_data_list,
+            self.target_data_class,
+            self.accordion_class,
+            self.editor_status_msg,
+            self.editor_status_class,
+            self.column_status,
+        )

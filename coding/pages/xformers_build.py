@@ -21,8 +21,10 @@ import code_editor.callbacks as editor_callbacks
 import code_editor.editor as editor_utils
 import base64
 from utils import xformers_build as xformers_utils
-from utils.xformers_build import xformer_validator
+from utils.xformers_build import XformerValidator
 import config.editor_config as editor_config
+from navigation import NavigationElements
+
 
 register_page(__name__, name="Trial", top_nav=True, path="/")
 
@@ -60,32 +62,9 @@ editor_saved_status_msg = "editor-saved-status-msg"
 
 
 def layout(new_xformer: bool = True):
-    """
-    Generates the layout for the transformer editor page.
-
-    Args:
-        new_xformer (bool, optional): Indicates whether a new transformer is being created. Defaults to True.
-
-    Returns:
-        html.Div: The generated layout for the transformer editor page.
-    """
-    disable_save_all = False
-    controls_div = html.Div(
-        id="editor-controls-div",
-        style={
-            "margin": "auto",
-            "padding": "20px",
-            "position": "sticky",
-            "top": "0",
-            "zIndex": "1000",
-            "border": "10px",
-        },
-    )
-    # Rest of the code...
-
-
-def layout(new_xformer: bool = True):
-
+    navigation_parts = NavigationElements()
+    NAVBAR = navigation_parts.navbar
+    FOOTER = navigation_parts.footer
     disable_save_all = False
     controls_div = html.Div(
         id="editor-controls-div",
@@ -271,6 +250,7 @@ def layout(new_xformer: bool = True):
 
     editor_div_body = html.Div(
         [
+            NAVBAR,
             controls_div,
             add_column_modal,
             sample_upload_widget,
@@ -296,6 +276,7 @@ def layout(new_xformer: bool = True):
                     "overflowY": "auto",
                 },
             ),
+            FOOTER,
         ],
         style={"padding": "20px"},
         id="xformers-editor-div",
@@ -313,6 +294,9 @@ editor_callbacks.load_editor_callback(
     editor_title_h2,
 )
 
+# this callback saves the code in the editor to
+# the indexed code list
+#
 editor_callbacks.save_editor_callback(
     editor_div,
     editor_element_index,
@@ -732,7 +716,7 @@ def test_code(
     Returns:
     - tuple: A tuple containing the return values of the xformer_validator function and the is_hide_editor flag.
     """
-    return_values = xformer_validator(
+    return_values = XformerValidator(
         editor_button,
         code_list,
         editor_element_index,
@@ -742,15 +726,26 @@ def test_code(
         accordion_class,
         column_status,
     )
+    # return_values = xformer_validator(
+    #     editor_button,
+    #     code_list,
+    #     editor_element_index,
+    #     sample_data_list,
+    #     target_data_list,
+    #     target_data_class,
+    #     accordion_class,
+    #     column_status,
+    # )
+    return_values.validate()
     is_hide_editor = (False,)
     if ctx.triggered_id == editor_close_button:
         if (
-            return_values[5][editor_element_index]
+            return_values.column_status[editor_element_index]
             != editor_config.EditorStatus.TEST_SUCCESS
-            and return_values[5][editor_element_index] is not None
+            and return_values.column_status[editor_element_index] is not None
         ):
             is_hide_editor = (False,)
         else:
             is_hide_editor = (True,)
 
-    return return_values + is_hide_editor
+    return return_values.return_values_in_tuple() + is_hide_editor
