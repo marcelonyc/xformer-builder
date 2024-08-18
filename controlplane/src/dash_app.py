@@ -207,4 +207,4 @@ def update_dataplane_status(n):
 
 # Run the application
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=config.debug)

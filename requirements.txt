@@ -12,4 +12,6 @@ sqlalchemy==2.0.31
 aiosqlite==0.20.0
 streaming_form_data==1.16.0
 iso8601==2.1.0
+fastapi-cli==0.0.5
+email_validator==2.2.0
 ./modules/dist/python_modules-0.1-py3-none-any.whl
