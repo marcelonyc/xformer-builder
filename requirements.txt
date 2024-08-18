@@ -7,8 +7,8 @@ pyyaml==6.0.1
 python-dotenv==1.0.1
 fastapi==0.112.0
 pyjwt==2.9.0
-flask-login==2.1.5
-sqlalchemy==3.0.3
+flask-login==0.6.3
+sqlalchemy==2.0.31
 aiosqlite==0.20.0
 streaming_form_data==1.16.0
 iso8601==2.1.0
