@@ -63,7 +63,7 @@ class XformerAssociationResponse(BaseModel):
 
 
 class XformerAssociationPayload(BaseModel):
-    xformer_name: str
+    xformer_id: str
     description: Optional[str] = None
 
 

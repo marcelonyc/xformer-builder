@@ -41,11 +41,11 @@ def layout(status: str = None):
     xformer_code = {}
     for _xformer in all_xformers.rows:
         xformer_select_options.append(
-            {"label": _xformer.name, "value": _xformer.name}
+            {"label": _xformer.name, "value": _xformer.id}
         )
-        xformer_source_columns[_xformer.name] = _xformer.xformer.source_column
-        xformer_target_columns[_xformer.name] = _xformer.xformer.target_column
-        xformer_code[_xformer.name] = _xformer.xformer.code
+        xformer_source_columns[_xformer.id] = _xformer.xformer.source_column
+        xformer_target_columns[_xformer.id] = _xformer.xformer.target_column
+        xformer_code[_xformer.id] = _xformer.xformer.code
 
     association_modal_object = dbc.Modal(
         [
@@ -178,14 +178,14 @@ def show_columns(selected, source_columns, target_columns, code):
     State(xformer_description, "value"),
     State(xformer_select, "value"),
 )
-def save_association(n_clicks, description, xformer_name):
+def save_association(n_clicks, description, xformer_id):
     if not n_clicks:
         return "", False
 
     _api_response = dataplane_post(
         "/file-association",
         data={
-            "xformer_name": xformer_name,
+            "xformer_id": xformer_id,
             "description": description,
         },
     )

@@ -78,7 +78,7 @@ async def list_xformer(
     if xformer_name != "all":
         select_statement = select_statement.where(
             xformer_store.c.name == xformer_name
-        )
+        ).where(xformer_store.c.user_id == request.state.user_profile.id)
 
     try:
         selected_rows = await database.fetch_all(select_statement)

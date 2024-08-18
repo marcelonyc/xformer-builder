@@ -49,7 +49,7 @@ async def associate_file_with_xformer(
     )
     select_statement = (
         select(xformer_store.c.id)
-        .where(xformer_store.c.name == association.xformer_name)
+        .where(xformer_store.c.id == association.xformer_id)
         .where(xformer_store.c.user_id == request.state.user_profile.id)
     )
     try:
@@ -111,7 +111,6 @@ async def get_list_of_uploaded_files(
             file_xformer_association.c.file_id == file_manager.c.file_id,
         )
     )
-    print(select_statement)
     try:
         _files = await database.fetch_all(select_statement)
     except Exception as e:
