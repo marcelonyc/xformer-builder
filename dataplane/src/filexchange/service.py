@@ -32,7 +32,8 @@ def process_file_status(
     )
     update_query = (
         update(file_manager)
-        .where(_and(file_id == file_id, upload_id == upload_id))
+        .where(file_manager.c.file_id == file_id)
+        .where(file_manager.c.upload_id == upload_id)
         .values(
             user_id=_user_id,
             file_size=file_manager.c.file_size + file_size,
@@ -87,7 +88,6 @@ def process_file(file_id: str, upload_id: str, filename: str):
 
     _user_id = _user_id_result[0]["user_id"]
     _xformer_id = _user_id_result[0]["xformer_id"]
-
     _, file_extension = os.path.splitext(filename)
     _xformer = get_xformer_from_db(_user_id, _xformer_id)
     file_df = filestoreprovider.get_file(file_id, upload_id, file_extension)
