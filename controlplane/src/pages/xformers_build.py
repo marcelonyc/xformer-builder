@@ -25,6 +25,7 @@ import config.editor_config as editor_config
 from auth.login_handler import require_login
 from dataplane.dataplane import dataplane_post
 from utils.utils import string_to_bool
+from lib.models import XformerRow
 
 register_page(__name__, name="Xformer", top_nav=True, path="/xformer-builder")
 require_login(__name__)
@@ -660,14 +661,17 @@ def add_column(
     col_list_position = editor_buttons.index(column_name)
 
     accordion_patched = Patch()
-    new_column = {
-        "column_index": len(editor_buttons),
-        "column_type": source_type[col_list_position],
-        "sample": column_sample[col_list_position],
-    }
+    new_column = XformerRow(
+        **{
+            "name": column_name,
+            "code": "",
+            "column_index": len(editor_buttons),
+            "column_type": source_type[col_list_position],
+            "sample": column_sample[col_list_position],
+        }
+    )
     new_column_row = xformers_utils.xformer_edit_row_build(
-        xformer=column_name,
-        xformer_dict=new_column,
+        xformer=new_column,
         editor_button=editor_button,
         editor_code=editor_code,
     )
