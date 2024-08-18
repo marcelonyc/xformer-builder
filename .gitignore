@@ -1,4 +1,4 @@
-coding/assets/src-noconflict/
+controlplane/assets/src-noconflict/
 *.py[cod]
 __pycache__/
 .DS_Store
@@ -8,4 +8,8 @@ __pycache__/
 *.old
 *.orig
 *.rej
-
+unit_test.py
+scrap/
+test.py
+controlplane/filestoreprovider/test.py
+controlplane/src/assets/src-noconflict
