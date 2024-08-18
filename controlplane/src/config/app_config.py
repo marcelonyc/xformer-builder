@@ -29,4 +29,5 @@ class AppConfig:
         self.debug = config["appcfg"]["debug"]
         self.dataplane_url = config["dataplane"]["url"]
         self.max_file_size = int(config["appcfg"]["max_file_size"])
+        self.max_storage_size = int(config["appcfg"]["max_storage_size"])
         self.enable_announcements = config["appcfg"]["enable_announcements"]

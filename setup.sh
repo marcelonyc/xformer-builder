@@ -22,7 +22,7 @@ if [ $? -ne 0 ]; then
 fi
 
 PROJECT_DIR=$(pwd)
-ASSETS_DIR=${PROJECT_DIR}/controlplane/assets
+ASSETS_DIR=${PROJECT_DIR}/controlplane/src/assets
 mkdir -p ${ASSETS_DIR}/src-noconflict/snippets
 _WORK_DIR=$(pwd)/$$
 mkdir -p $_WORK_DIR

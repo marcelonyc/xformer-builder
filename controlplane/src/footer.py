@@ -1,6 +1,9 @@
 import dash_bootstrap_components as dbc
 from flask_login import current_user
 from dash import html
+from config.app_config import AppConfig
+
+app_config = AppConfig()
 
 
 def create_footer():
@@ -36,6 +39,13 @@ def create_footer():
                         html.Div([""], id="logged-in-user-name"),
                     ],
                     width=4,
+                ),
+                dbc.Col(
+                    [
+                        html.Div(
+                            f"File Size Limit: {app_config.max_file_size} Bytes / Max Storage Size: {app_config.max_storage_size} Bytes"
+                        ),
+                    ]
                 ),
             ]
         ),

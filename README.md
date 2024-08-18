@@ -3,6 +3,8 @@
 This project is for learning purposes only and aims to demonstrate how to build a data transformer using restricted Python with a Web UI using [Dash](https://dash.plotly.com/). The transformer is designed to manipulate data in columns from a CSV file. The project provides a user interface (UI) that allows users to upload the CSV file and create transformers for each column using the [ACE code editor](http://ace.c9.io/).
 
 Questions: [Ask Here](https://github.com/marcelonyc/xformer-builder/labels/question)
+
+Live Demo: [Here](https://marcelonyc.pythonanywhere.com/)
 ## Features
 
 - Upload CSV file: Users can easily upload their desired CSV file through the user interface.
@@ -17,7 +19,7 @@ To get started with Xformer Builder, follow these steps:
 1. Clone the repository: `git clone https://github.com/marcelonyc/xformer-builder`
 2. Run setup.sh 
     - Requires Python > 3.10 
-3. cd to the `controlplane` directory
+3. cd to the `coding` directory
 4. Run `python dash_app.py`
 4. Access the application through your web browser at `http://localhost:8050`
 
@@ -55,13 +57,13 @@ Contributions are welcome! If you would like to contribute to Xformer Builder, p
 
 Here are some screenshots of the Xformer Builder application:
 
-![Screenshot 1](/controlplane/assets/images/Screenshot%202024-07-13%20at%2012.52.17 PM.png)
+![Screenshot 1](/coding/assets/images/Screenshot%202024-07-13%20at%2012.52.17 PM.png)
 ---
-![Screenshot 1](/controlplane/assets/images/Screenshot%202024-07-13%20at%201.08.00 PM.png)
+![Screenshot 1](/coding/assets/images/Screenshot%202024-07-13%20at%201.08.00 PM.png)
 ---
 ### Expand row to see transformation resutls
 <a name="expandit"></a>
-![Screenshot 1](/controlplane/assets/images/Screenshot%202024-07-13%20at%202.56.21 PM.png)
+![Screenshot 1](/coding/assets/images/Screenshot%202024-07-13%20at%202.56.21 PM.png)
 
 
 ## License

@@ -73,12 +73,14 @@ def layout(status: str = None):
         dbc.Select(
             id=xformer_select,
             options=xformer_select_options,
+            required=True,
         ),
         dbc.Label("Description", html_for=xformer_select),
         dbc.Input(
             id=xformer_description,
             type="text",
             maxlength=100,
+            required=True,
             placeholder="Something to remind you who uploads this file",
         ),
         html.Div(id=columns_display),
