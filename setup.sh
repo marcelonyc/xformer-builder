@@ -45,7 +45,7 @@ if [ $? -ne 0 ]; then
     log_error "Failed to copy ACE editor files"
     exit 1
 fi
-cp ace-builds/src-noconflict/snippets/python.js ${ASSETS_DIR}/src-noconflict/snippets/. > /dev/null 2>&1
+cp -r ace-builds/src-noconflict/snippets/python.js ${ASSETS_DIR}/src-noconflict/snippets/. > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     log_error "Failed to copy ACE Python editor files"
     exit 1
