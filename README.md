@@ -1,3 +1,5 @@
+ <link href="https://use.fontawesome.com/releases/v6.2.1/css/all.css",
+ rel="stylesheet"></link> 
 # Xformer Builder
 
 > **IMPORTANT**
@@ -14,6 +16,7 @@ Live Demo: [Here](https://marcelonyc.pythonanywhere.com/)
 - Upload CSV file: Users can easily upload their desired CSV file through the user interface.
 - Column transformers: The project allows users to create transformers for each column using the ACE code editor.
 - Restricted Python: The data transformer utilizes restricted Python to ensure secure and controlled data manipulation.
+- Share a unique URL to upload/download files
 
 
 ## Getting Started
@@ -23,11 +26,16 @@ To get started with Xformer Builder, follow these steps:
 1. Clone the repository: `git clone https://github.com/marcelonyc/xformer-builder`
 2. Run setup.sh 
     - Requires Python > 3.10 
-3. cd to the `coding` directory
-4. Run `python dash_app.py`
-4. Access the application through your web browser at `http://localhost:8050`
+3. In one terminal run: `start-dev-dataplane.sh`
+4. In another terminal run: `start-dev-controlplane.sh`
+5. Access the application through your web browser at `http://localhost:8050`
 
-## Usage
+
+<div style="margin: auto; width: 80%;"><div class="table-responsive"><table class="table table-striped table-bordered table-hover"><tbody><tr><td><a href="https://marcelonyc.pythonanywhere.com/register"><i class="fa-solid fa-1 fa-xl"></i></a></td><td><a href="https://marcelonyc.pythonanywhere.com/register"><i class="fa-solid fa-cash-register fa-xl"></i></a></td><td>Register for an Account. You will get a token to login. Don't lose it!</td></tr><tr><td><a href="https://marcelonyc.pythonanywhere.com/xformer-builder"><i class="fa-solid fa-2 fa-xl"></i></a></td><td><a href="https://marcelonyc.pythonanywhere.com/xformer-builder"><i class="fa-solid fa-arrow-right-arrow-left fa-xl"></i></a></td><td>Create a transformer with a sample of the CSV file you want to transform.You can later associate one or more file uploads with this transformer.</td></tr><tr><td><a href="https://marcelonyc.pythonanywhere.com/edit-xformer"><i class="fa-solid fa-3 fa-xl"></i></a></td><td><a href="https://marcelonyc.pythonanywhere.com/edit-xformer"><i class="fa-solid fa-pen-to-square fa-xl"></i></a></td><td>Edit and existing transformer. Warning: This will overwrite the existing transformer</td></tr><tr><td><a href="https://marcelonyc.pythonanywhere.com/associate-xformer"><i class="fa-solid fa-4 fa-xl"></i></a></td><td><a href="https://marcelonyc.pythonanywhere.com/associate-xformer"><i class="fa-solid fa-link fa-xl"></i></a></td><td>Associate a transformer with a file upload. This steps generastes a unique URL for the file upload</td></tr><tr><td><a href="https://marcelonyc.pythonanywhere.com/"><i class="fa-solid fa-5 fa-xl"></i></a></td><td><a href="https://marcelonyc.pythonanywhere.com/"><i class="fa-solid fa-share-from-square fa-xl"></i></a></td><td>Share the unique URL with the user who will upload the file</td></tr><tr><td><a href="https://marcelonyc.pythonanywhere.com/download"><i class="fa-solid fa-6 fa-xl"></i></a></td><td><a href="https://marcelonyc.pythonanywhere.com/download"><i class="fa-solid fa-download fa-xl"></i></a></td><td>When a user uploads a file, a unique URL will be generated for the file download. As an administrator you can also list the files available for download</td></tr></tbody></table></div></div>
+
+Try it in the demo environment: [Demo](https://marcelonyc.pythonanywhere.com)
+
+## Create a transformer
 
 1. Upload CSV file: Click on "Upload Sample CSV file" and select the desired CSV file from your local machine.
 2. Create transformers: Use the ACE code editor to create transformers for each column. Ensure that the code adheres to the restricted Python guidelines.
@@ -61,13 +69,13 @@ Contributions are welcome! If you would like to contribute to Xformer Builder, p
 
 Here are some screenshots of the Xformer Builder application:
 
-![Screenshot 1](/coding/assets/images/Screenshot%202024-07-13%20at%2012.52.17 PM.png)
+![Screenshot 1](/controlplane/src/assets/images/Screenshot%202024-07-13%20at%2012.52.17 PM.png)
 ---
-![Screenshot 1](/coding/assets/images/Screenshot%202024-07-13%20at%201.08.00 PM.png)
+![Screenshot 1](/controlplane/src/assets/images/Screenshot%202024-07-13%20at%201.08.00 PM.png)
 ---
 ### Expand row to see transformation resutls
 <a name="expandit"></a>
-![Screenshot 1](/coding/assets/images/Screenshot%202024-07-13%20at%202.56.21 PM.png)
+![Screenshot 1](/controlplane/src/assets/images/Screenshot%202024-07-13%20at%202.56.21 PM.png)
 
 
 ## License
