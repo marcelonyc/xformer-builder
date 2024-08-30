@@ -21,3 +21,6 @@ class FileStoreProvider:
 
     def get_file(self, file_name: str) -> pd.DataFrame:
         pass
+
+    def delete_file(self, file_name: str):
+        pass

@@ -16,19 +16,18 @@ from sqlalchemy import (
     Update,
     Delete,
     func,
+    LargeBinary,
 )
 from pydantic import PostgresDsn
 from typing import Any
 from sqlalchemy.dialects.postgresql import UUID, JSONB, BIGINT
 from sqlalchemy.dialects.sqlite import JSON
 from sqlalchemy.ext.asyncio import create_async_engine
-from config.app_config import AppConfig
+from config.app_config import get_settings
 from constants import DB_NAMING_CONVENTION
 
 
-app_config = AppConfig()
-
-DATABASE_URL = str(app_config.db_url)
+DATABASE_URL = str(get_settings().db_url)
 sync_db_url = DATABASE_URL.replace("+aiosqlite", "")
 if "sqlite" in DATABASE_URL:
     engine = create_async_engine(
@@ -110,10 +109,12 @@ else:
 users = Table(
     "users",
     metadata,
-    Column("token", String, primary_key=True),
     Column("name", String, nullable=False),
     Column("email", String, nullable=False),
-    Column("id", String, nullable=False),
+    Column("id", String, primary_key=True, nullable=False),
+    Column("username", String, nullable=False),
+    Column("salt", LargeBinary, nullable=False),
+    Column("hashed_token", LargeBinary, nullable=False),
     Column("description", String, nullable=False),
     Column("created_at", DateTime, nullable=False, default=func.now()),
     Column("updated_at", DateTime, nullable=False, default=func.now()),

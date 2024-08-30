@@ -16,8 +16,11 @@ register_page(__name__, name="Home", top_nav=True, path="/")
 
 def layout(new_xformer: bool = True):
 
-    title = html.H1("Transformers Editor")
-    subtitle = html.H2("Getting started")
+    title = html.H1("Onboard customer's data with ease")
+    subtitle = html.H4(
+        "Sample, transform, map and simplify you data exchanges"
+    )
+    getting_started = html.H3("Getting started")
 
     rows = []
     row_data = [
@@ -32,7 +35,7 @@ def layout(new_xformer: bool = True):
             "class": "fa-solid fa-arrow-right-arrow-left fa-xl",
             "href": "/xformer-builder",
             "text": "Create a transformer with a sample of "
-            "the CSV file you want to transform.You can later "
+            "the CSV/XLS file you want to transform.You can later "
             "associate one or more file uploads with this transformer.",
         },
         {
@@ -98,7 +101,7 @@ def layout(new_xformer: bool = True):
     )
 
     return dbc.Container(
-        [title, subtitle, html.Br(), table],
+        [title, subtitle, html.Hr(), getting_started, html.Br(), table],
         className="p-3 bg-body-secondary rounded-3",
         style={"margin": "20px", "width": "80%", "position": "center"},
     )

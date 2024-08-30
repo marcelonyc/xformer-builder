@@ -4,12 +4,15 @@ import filestoreprovider.apiprovider as apiprovider
 import filestoreprovider.gdriveprovider as gdriveprovider
 import filestoreprovider.localfsprovider as localfsprovider
 import filestoreprovider.s3provider as s3provider
+from vaultprovider.base import VaultProvider
 
 
 class FileStoreProviderFactory:
 
     @staticmethod
-    def get_provider(config: configparser.ConfigParser):
+    def get_provider(
+        config: configparser.ConfigParser, vaultprovider: VaultProvider
+    ):
         if config["fileprovider"]["type"] == "localfs":
             _provider = localfsprovider.LocalFSProvider(
                 required_directory=config["fileprovider"]["path"],

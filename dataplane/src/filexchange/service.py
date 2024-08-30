@@ -2,7 +2,7 @@ from database import database, xformer_store, users
 from fastapi import HTTPException, status
 from sqlalchemy import select, func, insert, update, and_ as _and
 from sqlalchemy.exc import IntegrityError
-from config.app_config import AppConfig
+from config.app_config import get_settings
 from lib.models import XformerData
 from database import database, file_xformer_association, file_manager, users
 import python_modules.code_validator.code_validator as code_validator
@@ -12,21 +12,19 @@ import io
 import sys
 import logging
 
-app_config = AppConfig()
-
 
 def process_file_status(
     file_id: str,
     upload_id: str,
     file_size: int = 0,
-    _user_id: str = None,
+    user_id: str = None,
     msg: str = None,
 ):
     # Add upload to file manager
     insert_query = insert(file_manager).values(
         file_id=file_id,
         upload_id=upload_id,
-        user_id=_user_id,
+        user_id=user_id,
         file_size=file_size,
         last_update_message=msg,
     )
@@ -35,7 +33,7 @@ def process_file_status(
         .where(file_manager.c.file_id == file_id)
         .where(file_manager.c.upload_id == upload_id)
         .values(
-            user_id=_user_id,
+            user_id=user_id,
             file_size=file_manager.c.file_size + file_size,
             last_update_message=msg,
         )
@@ -68,7 +66,7 @@ def get_xformer_from_db(id: str, xformer_id: str) -> XformerData:
 
 def process_file(file_id: str, upload_id: str, filename: str):
 
-    filestoreprovider = app_config.filestoreprovider
+    filestoreprovider = get_settings().filestoreprovider
     # Get user_id and xformer_id
     user_select = select(
         file_xformer_association.c.user_id,
@@ -89,8 +87,37 @@ def process_file(file_id: str, upload_id: str, filename: str):
     _user_id = _user_id_result[0]["user_id"]
     _xformer_id = _user_id_result[0]["xformer_id"]
     _, file_extension = os.path.splitext(filename)
-    _xformer = get_xformer_from_db(_user_id, _xformer_id)
-    file_df = filestoreprovider.get_file(file_id, upload_id, file_extension)
+    process_file_status(
+        file_id,
+        upload_id,
+        0,
+        msg="Queued for processing",
+        user_id=_user_id,
+    )
+
+    try:
+        _xformer = get_xformer_from_db(_user_id, _xformer_id)
+    except Exception as e:
+        process_file_status(
+            file_id,
+            upload_id,
+            user_id=_user_id,
+            msg="Could not fetch xformer",
+        )
+        return
+
+    try:
+        file_df = filestoreprovider.get_file(
+            file_id, upload_id, file_extension
+        )
+    except Exception as e:
+        process_file_status(
+            file_id,
+            upload_id,
+            user_id=_user_id,
+            msg="Could not fetch file",
+        )
+        return
 
     # Rename columns
     try:
@@ -104,7 +131,12 @@ def process_file(file_id: str, upload_id: str, filename: str):
                         ]
                     ]
     except Exception as e:
-        process_file_status(file_id, upload_id, msg="Could not rename columns")
+        process_file_status(
+            file_id,
+            upload_id,
+            user_id=_user_id,
+            msg="Could not rename columns",
+        )
         return
 
     try:
@@ -121,7 +153,9 @@ def process_file(file_id: str, upload_id: str, filename: str):
                     axis=1,
                 )
     except Exception as e:
-        process_file_status(file_id, upload_id, msg="Could not execute code")
+        process_file_status(
+            file_id, upload_id, user_id=_user_id, msg="Could not execute code"
+        )
         return
 
     stream = io.StringIO()
@@ -131,7 +165,10 @@ def process_file(file_id: str, upload_id: str, filename: str):
         )
     except Exception as e:
         process_file_status(
-            file_id, upload_id, msg="Could not save trasnformed file to memory"
+            file_id,
+            upload_id,
+            user_id=_user_id,
+            msg="Could not save trasnformed file to memory",
         )
         return
 
@@ -140,7 +177,10 @@ def process_file(file_id: str, upload_id: str, filename: str):
         file_size = sys.getsizeof(stream.getvalue())
     except Exception as e:
         process_file_status(
-            file_id, upload_id, msg="Could not save transformed file"
+            file_id,
+            upload_id,
+            user_id=_user_id,
+            msg="Could not save transformed file",
         )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -150,7 +190,7 @@ def process_file(file_id: str, upload_id: str, filename: str):
     stream.close()
 
     process_file_status(
-        file_id, upload_id, file_size, _user_id, msg="File processed"
+        file_id, upload_id, file_size, user_id=_user_id, msg="File processed"
     )
 
 
@@ -199,7 +239,7 @@ async def check_account_total_size(file_id: str):
             detail="File not found",
         )
 
-    if (_storage_sum[0].get("sum_1") or 0) >= app_config.max_storage_size:
+    if (_storage_sum[0].get("sum_1") or 0) >= get_settings().max_storage_size:
         raise file_exception
 
     return True

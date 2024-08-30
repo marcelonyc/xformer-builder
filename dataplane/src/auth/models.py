@@ -34,4 +34,5 @@ class RegisterUserResponse(BaseModel):
 
 class UserProfile(RegisterUser):
     id: str = None
-    token: str = None
+    salt: bytes = None
+    hashed_token: bytes = None

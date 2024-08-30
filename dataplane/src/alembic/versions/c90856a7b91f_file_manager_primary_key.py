@@ -12,11 +12,10 @@ from alembic import op
 import sqlalchemy as sa
 
 
-from config.app_config import AppConfig
+from config.app_config import get_settings
 
-app_config = AppConfig()
 db_type = "postgresql"
-if "sqlite" in app_config.db_url:
+if "sqlite" in get_settings().db_url:
     db_type = "sqlite"
 
 

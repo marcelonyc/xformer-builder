@@ -77,7 +77,7 @@ def layout(new_xformer: bool = True, xformer_name: str = ""):
         },
     )
     if string_to_bool(new_xformer):
-        upload_children = ["Upload Sample CSV File. Limit 3 rows"]
+        upload_children = ["Upload Sample CSV/XLS File. Limit 3 rows"]
         upload_style = {
             "width": "100%",
             "height": "60px",

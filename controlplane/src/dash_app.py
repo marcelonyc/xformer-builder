@@ -3,7 +3,7 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import html, dcc, Output, Input, ALL, callback
 import os
-from config.app_config import AppConfig
+from config.app_config import get_settings
 import base64
 from flask import Flask, request, redirect, session
 from flask_login import login_user, LoginManager, current_user
@@ -55,8 +55,9 @@ app = dash.Dash(
     suppress_callback_exceptions=suppress_callback_exceptions,
 )
 
-session_secret = base64.b64encode(os.urandom(30)).decode("utf-8")
-server.config.update(SECRET_KEY=session_secret)
+# session_secret = base64.b64encode(os.urandom(30)).decode("utf-8")
+
+server.config.update(SECRET_KEY=os.getenv("SESSION_SECRET"))
 
 # Login manager object will be used to login / logout users
 login_manager = LoginManager()
@@ -73,7 +74,7 @@ def load_user(user_profile: str):
     return UserAuthenticated(user_profile)
 
 
-config = AppConfig()
+config = get_settings()
 
 navigation_parts = NavigationElements()
 NAVBAR = navigation_parts.navbar
@@ -205,6 +206,11 @@ def update_dataplane_status(n):
             return alert
 
 
+# if os.getenv("DASH_DEBUG", False):
+#     app.enable_dev_tools(debug=True)
+
+
+application = app.server
 # Run the application
 if __name__ == "__main__":
     app.run(debug=config.debug)

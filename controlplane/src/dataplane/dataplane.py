@@ -3,7 +3,7 @@ import config.app_config as app_config
 from flask_login import current_user
 import json
 
-config = app_config.AppConfig()
+config = app_config.get_settings()
 
 
 def dataplane_get(endpoint: str, headers: dict = None, auth: bool = True):

@@ -1,9 +1,9 @@
 import dash_bootstrap_components as dbc
 from flask_login import current_user
 from dash import html
-from config.app_config import AppConfig
+from config.app_config import get_settings
 
-app_config = AppConfig()
+app_config = get_settings()
 
 
 def create_footer():

@@ -28,14 +28,14 @@ from lib.models import (
     ListUploadedFilesResponse,
 )
 import json
-from config.app_config import AppConfig
+from typing import Annotated
+
+from config.app_config import get_settings
 
 
 from backgroundprovider.base import BackgroundProvider
 
 router = APIRouter(dependencies=[Depends(service.validate_app_token)])
-
-app_config = AppConfig()
 
 
 @router.post("/file-association")
@@ -132,7 +132,7 @@ async def get_list_of_uploaded_files(
     files = ListUploadedFilesResponse(files=_files_response)
 
     for _file_update in range(len((files.files))):
-        files.files[_file_update].file_ttl = app_config.file_ttl
+        files.files[_file_update].file_ttl = get_settings().file_ttl
         files.files[_file_update].update_expiration()
 
     return files

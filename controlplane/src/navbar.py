@@ -105,9 +105,25 @@ def create_navbar():
             trigger="hover",
         ),
         dbc.Popover(
-            "Create unique file link associated with a transformer",
+            "Create unique file upload link",
             target="assign-xformer-menu-link",
             id="assign-xformer-menu-link-popover",
+            body=True,
+            placement="bottom",
+            trigger="hover",
+        ),
+        dbc.Popover(
+            "Available Downloads",
+            target="download-menu-link",
+            id="download-menu-link-popover",
+            body=True,
+            placement="bottom",
+            trigger="hover",
+        ),
+        dbc.Popover(
+            "Report Issues",
+            target="issue-tracker",
+            id="issue-tracker-popover",
             body=True,
             placement="bottom",
             trigger="hover",
@@ -212,5 +228,5 @@ def create_navbar():
             )
         ),
         sticky="top",
-        brand="Data Exchange",
+        brand="Data Onboarding",
     )

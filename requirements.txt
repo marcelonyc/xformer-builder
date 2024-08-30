@@ -14,4 +14,8 @@ streaming_form_data==1.16.0
 iso8601==2.1.0
 fastapi-cli==0.0.5
 email_validator==2.2.0
+python-magic==0.4.27
+openpyxl==3.1.5
+xlrd==2.0.1
+gunicorn[gevent]==23.0.0
 ./modules/dist/python_modules-0.1-py3-none-any.whl
