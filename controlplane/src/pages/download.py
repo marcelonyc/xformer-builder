@@ -10,7 +10,7 @@ from dash import (
 import dash_bootstrap_components as dbc
 import code_editor.editor as editor_utils
 import base64
-from config.app_config import AppConfig
+from config.app_config import get_settings
 from auth.login_handler import require_login
 from dataplane.dataplane import dataplane_post, dataplane_get
 from lib.models import ListUploadedFilesResponse
@@ -24,7 +24,7 @@ register_page(
 require_login(__name__)
 
 
-app_config = AppConfig()
+app_config = get_settings()
 
 
 def layout(association_id: str = ""):

@@ -73,7 +73,7 @@ class UploadedFilesResponse(BaseModel):
     file_size: int
     upload_date: str
     last_update_message: str
-    description: str
+    description: Optional[str]
     file_ttl: int = 0
     file_expires_in_hours: Annotated[int, Field(validate_default=True)] = 0
 

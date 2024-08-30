@@ -11,10 +11,9 @@ from alembic import op
 import sqlalchemy as sa
 ${imports if imports else ""}
 
-from config.app_config import AppConfig
-app_config = AppConfig()
+from config.app_config import app_settings
 db_type='postgresql'
-if 'sqlite' in app_config.db_url:
+if 'sqlite' in app_settings().db_url:
     db_type='sqlite'
 
 

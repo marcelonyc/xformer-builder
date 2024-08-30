@@ -1,3 +1,11 @@
-Controlplane
+Both
+* Full implementation of gunicorn and logging
 
-* Return Url for dowloading the file
+Controlplane
+* Manage function repo
+
+Dataplane
+* Email verification implementation
+* Functions repository
+* Support xlsx files
+* Hash Salt Token

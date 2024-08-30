@@ -5,24 +5,19 @@ from fastapi import (
     status,
     HTTPException,
 )
-from fastapi.responses import Response, StreamingResponse, JSONResponse
-from auth import service
+from fastapi.responses import StreamingResponse, JSONResponse
 import filexchange.service as filexchange_service
-import os
 import uuid
-import urllib.parse as parseurl
 from streaming_form_data.targets import ValueTarget
-from config.app_config import AppConfig
+from config.app_config import get_settings
 from streaming_form_data import StreamingFormDataParser
 from database import (
     database,
     file_xformer_association,
-    xformer_store,
     file_manager,
 )
 import io
-from sqlalchemy import insert, select, func
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy import select, func
 from filexchange.service import process_file_status
 
 
@@ -31,10 +26,9 @@ from backgroundprovider.base import BackgroundProvider
 # WARNING - These routes are not protected by the auth service
 router = APIRouter()
 
-app_config = AppConfig()
-backgroundprovider: BackgroundProvider = app_config.backgroundprovider
+backgroundprovider: BackgroundProvider = get_settings().backgroundprovider
 
-MAX_FILE_SIZE = app_config.max_file_size
+MAX_FILE_SIZE = get_settings().max_file_size
 MAX_REQUEST_BODY_SIZE = MAX_FILE_SIZE + 1024
 
 
@@ -72,7 +66,7 @@ async def upload_file(
     filename = request.headers.get("Filename")
     body_validator = MaxBodySizeValidator(MAX_REQUEST_BODY_SIZE)
 
-    file_ = app_config.filestoreprovider.Target(upload_id, file_id)
+    file_ = get_settings().filestoreprovider.Target(upload_id, file_id)
     data = ValueTarget()
     parser = StreamingFormDataParser(headers=request.headers)
     parser.register("file", file_)
@@ -99,8 +93,6 @@ async def upload_file(
         filexchange_service.process_file, file_id, upload_id, filename
     )
 
-    process_file_status(file_id, upload_id, 0, 0, msg="Queued for processing")
-
     call_url = request.url
     if call_url.port:
         call_url_port = f":{call_url.port}"
@@ -124,7 +116,15 @@ async def upload_file(
     # file_limit: dict = Depends(service.get_file_limits),
 ) -> StreamingResponse:
 
-    file_df = app_config.filestoreprovider.get_file(file_id, upload_id, True)
+    try:
+        file_df = get_settings().filestoreprovider.get_file(
+            file_id, upload_id, True
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="File not found",
+        )
     stream = io.StringIO()
     file_df.to_csv(stream, index=False)
     response = StreamingResponse(
@@ -161,7 +161,9 @@ async def upload_file(
             detail="File not found",
         )
     upload_id = _upload_id[0]["upload_id"]
-    file_df = app_config.filestoreprovider.get_file(file_id, upload_id, True)
+    file_df = get_settings().filestoreprovider.get_file(
+        file_id, upload_id, True
+    )
     stream = io.StringIO()
     file_df.to_csv(stream, index=False)
     response = StreamingResponse(

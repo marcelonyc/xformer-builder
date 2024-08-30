@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 import code_editor.editor as editor_utils
 import base64
 from flask import request
-from config.app_config import AppConfig
+from config.app_config import get_settings
 from dataplane.dataplane import dataplane_post, dataplane_get
 
 register_page(
@@ -14,7 +14,7 @@ register_page(
     path_template="/upload/<association_id>",
 )
 
-app_config = AppConfig()
+app_config = get_settings()
 
 association_upload_id = "upload-association-data"
 hidden_association_id = "hidden-association-id"
@@ -43,7 +43,9 @@ def layout(association_id: str = ""):
         is_open=False,
     )
     upload_children = [
-        "Upload CSV File. Max file size {}".format(app_config.max_file_size)
+        "Upload CSV/XLS File. Max file size {}".format(
+            app_config.max_file_size
+        )
     ]
     upload_style = {
         "width": "100%",

@@ -4,9 +4,8 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from config.app_config import AppConfig
+from config.app_config import get_settings
 
-app_config = AppConfig()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -27,8 +26,8 @@ target_metadata = None
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-print("Running migrations offline: {}".format(app_config.db_url))
-sync_db_url = app_config.db_url.replace("+aiosqlite", "")
+print("Running migrations offline: {}".format(get_settings().db_url))
+sync_db_url = get_settings().db_url.replace("+aiosqlite", "")
 config.set_main_option("sqlalchemy.url", sync_db_url)
 
 

@@ -1,6 +1,6 @@
 # Import necessary libraries
 from dash import html, register_page, callback, dcc, Output, Input, State
-from config.app_config import AppConfig
+from config.app_config import get_settings
 from dataplane.dataplane import dataplane_get_file
 
 register_page(
@@ -11,7 +11,7 @@ register_page(
 )
 
 
-app_config = AppConfig()
+app_config = get_settings()
 
 
 def layout(file_id: str = "", upload_id: str = ""):
