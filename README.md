@@ -2,7 +2,7 @@
  rel="stylesheet"></link>
 
 
-# Data Onboarding - transfomer builder
+# Data Onboarding - transformer builder
 ## Sample, transform, map and simplify you data exchanges
 
 
