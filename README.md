@@ -22,6 +22,8 @@ Live Demo: [Here](https://marcelonyc.pythonanywhere.com/)
 - Restricted Python: The data transformer utilizes restricted Python to ensure secure and controlled data manipulation.
 - Share a unique URL to upload/download files
 
+![Application Flow](assets/ApplicationFlow.drawio.png)
+
 
 ## Getting Started
 
@@ -32,7 +34,7 @@ To get started with Xformer Builder, follow these steps:
     - Requires Python > 3.10 
 3. In one terminal run: `start-dev-dataplane.sh`
 4. In another terminal run: `start-dev-controlplane.sh`
-5. Access the application through your web browser at `http://localhost:8081`
+5. Access the application through your web browser at `http://localhost:8050`
 
 
 <div style="margin: auto; width: 80%;"><div class="table-responsive"><table class="table table-striped table-bordered table-hover"><tbody><tr><td><a href="https://marcelonyc.pythonanywhere.com/register"><i class="fa-solid fa-1 fa-xl"></i></a></td><td><a href="https://marcelonyc.pythonanywhere.com/register"><i class="fa-solid fa-cash-register fa-xl"></i></a></td><td>Register for an Account. You will get a token to login. Don't lose it!</td></tr><tr><td><a href="https://marcelonyc.pythonanywhere.com/xformer-builder"><i class="fa-solid fa-2 fa-xl"></i></a></td><td><a href="https://marcelonyc.pythonanywhere.com/xformer-builder"><i class="fa-solid fa-arrow-right-arrow-left fa-xl"></i></a></td><td>Create a transformer with a sample of the CSV/XLS file you want to transform.You can later associate one or more file uploads with this transformer.</td></tr><tr><td><a href="https://marcelonyc.pythonanywhere.com/edit-xformer"><i class="fa-solid fa-3 fa-xl"></i></a></td><td><a href="https://marcelonyc.pythonanywhere.com/edit-xformer"><i class="fa-solid fa-pen-to-square fa-xl"></i></a></td><td>Edit and existing transformer.</td></tr><tr><td><a href="https://marcelonyc.pythonanywhere.com/associate-xformer"><i class="fa-solid fa-4 fa-xl"></i></a></td><td><a href="https://marcelonyc.pythonanywhere.com/associate-xformer"><i class="fa-solid fa-link fa-xl"></i></a></td><td>Associate a transformer with a file upload. This steps generastes a unique URL for the file upload</td></tr><tr><td><a href="https://marcelonyc.pythonanywhere.com/"><i class="fa-solid fa-5 fa-xl"></i></a></td><td><a href="https://marcelonyc.pythonanywhere.com/"><i class="fa-solid fa-share-from-square fa-xl"></i></a></td><td>Share the unique URL with the user who will upload the file</td></tr><tr><td><a href="https://marcelonyc.pythonanywhere.com/download"><i class="fa-solid fa-6 fa-xl"></i></a></td><td><a href="https://marcelonyc.pythonanywhere.com/download"><i class="fa-solid fa-download fa-xl"></i></a></td><td>When a user uploads a file, a unique URL will be generated for the file download. As an administrator you can also list the files available for download</td></tr></tbody></table></div></div>

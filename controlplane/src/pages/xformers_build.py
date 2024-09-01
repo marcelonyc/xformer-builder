@@ -77,7 +77,7 @@ def layout(new_xformer: bool = True, xformer_name: str = ""):
         },
     )
     if string_to_bool(new_xformer):
-        upload_children = ["Upload Sample CSV/XLS File. Limit 3 rows"]
+        upload_children = ["Upload Sample CSV/XLS File. Limit 2500 bytes"]
         upload_style = {
             "width": "100%",
             "height": "60px",
@@ -88,6 +88,7 @@ def layout(new_xformer: bool = True, xformer_name: str = ""):
             "textAlign": "center",
             "margin": "10px",
         }
+
         button_row_hidden = True
         name_read_only = False
         accordion_body = None
@@ -96,6 +97,7 @@ def layout(new_xformer: bool = True, xformer_name: str = ""):
             id="upload-sample-data",
             max_size=2500,
             style=upload_style,
+            className_reject="btn-danger bordeer-danger",
             disabled=not new_xformer,
         )
     else:
