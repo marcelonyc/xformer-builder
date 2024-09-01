@@ -35,6 +35,10 @@ class AppConfig:
         self.enable_announcements = config.get(
             "appcfg", "enable_announcements"
         )
+        self.webhook_domain_whitelist = config.get(
+            "appcfg", "webhook_domain_whitelist"
+        ).split(",")
+
         self.vaultprovider = vp.VaultProviderFactory.get_provider(config)
 
         self.dataplane_token = self.vaultprovider.get_secret("dataplane_token")

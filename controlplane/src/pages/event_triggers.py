@@ -12,6 +12,7 @@ from dash import (
     ALL,
 )
 import base64
+from pydantic import AnyUrl
 import uuid
 import json
 from flask import request
@@ -24,6 +25,7 @@ from lib.models import (
     EventTriggerTypes,
     WebhookEventMetadata,
 )
+from config.app_config import get_settings
 
 
 register_page(
@@ -37,6 +39,7 @@ require_login(__name__)
 
 # Button to save code. Uses editor_element_index to identify editor
 event_trigger_select = "event-trigger-select"
+event_trigger_form_div = "event-trigger-form-div"
 event_type_select = "event-type-select"
 webhooks_input = "webhooks-input"
 webhook_body = "webhook-body"
@@ -47,6 +50,11 @@ webhook_headers_div = "webhook-headers-div"
 webhook_add_header_button = "webhook-add-header-button"
 webhook_header_key = "webhook-header-key"
 webhook_header_value = "webhook-header-value"
+form_style = {
+    "border": "2px",
+    "border-style": "solid",
+    "border-color": "black",
+}
 existing_trigger_id = "existing-trigger-id"
 save_event_trigger_button = "save-event-trigger"
 event_trigger_status_div = "event-trigger-status"
@@ -67,13 +75,18 @@ def layout():
 
     _api_respose = dataplane_get("/list-event-triggers")
 
-    all_triggers: EventTriggerList = EventTriggerList(**_api_respose)
-
     trigger_select_options = []
 
-    for _trigger in all_triggers.triggers:
-        trigger_select_options.append(
-            {"label": _trigger.event_description, "value": _trigger.id}
+    trigger_store = None
+    if _api_respose.get("triggers"):
+        all_triggers: EventTriggerList = EventTriggerList(**_api_respose)
+
+        for _trigger in all_triggers.triggers:
+            trigger_select_options.append(
+                {"label": _trigger.event_description, "value": _trigger.id}
+            )
+        trigger_store = dcc.Store(
+            id=all_triggers_store, data=all_triggers.model_dump()
         )
 
     select_existing_input = [
@@ -86,7 +99,7 @@ def layout():
             options=trigger_select_options,
             required=False,
         ),
-        dcc.Store(id=all_triggers_store, data=all_triggers.model_dump()),
+        trigger_store,
         dbc.Input(id=existing_trigger_id, type="hidden"),
     ]
 
@@ -132,7 +145,7 @@ def layout():
                 dbc.Input(
                     id=webhook_url,
                     type="url",
-                    placeholder="Enter webhook URL",
+                    placeholder=f"Enter webhook URL. Allowed domains: {get_settings().webhook_domain_whitelist}",
                     required=True,
                 ),
                 dbc.Label("Method"),
@@ -192,7 +205,9 @@ def layout():
         style={"padding": "20px"},
     )
 
-    return html.Div([event_trigger_form])
+    return html.Div(
+        [event_trigger_form], id=event_trigger_form_div, style=form_style
+    )
 
 
 @callback(
@@ -247,6 +262,7 @@ def add_header_input(n_clicks, header_keys):
 
 @callback(
     Output(event_trigger_status_div, "children"),
+    Output(event_trigger_form_div, "style"),
     Input(save_event_trigger_button, "n_clicks"),
     State(event_trigger_description, "value"),
     State(event_type_select, "value"),
@@ -269,6 +285,33 @@ def save_event_trigger(
     header_values,
     existing_trigger_id,
 ):
+    try:
+        _url = AnyUrl(url)
+    except Exception as e:
+        form_style["border-color"] = "red"
+        return (
+            html.Div(
+                [
+                    html.P("Failed to save Event Trigger"),
+                    html.P("Error: " + str(e)),
+                ],
+                style={"color": "red"},
+            ),
+            form_style,
+        )
+    if _url.host not in get_settings().webhook_domain_whitelist:
+        form_style["border-color"] = "red"
+        return (
+            html.Div(
+                [
+                    html.P("Failed to save Event Trigger"),
+                    html.P("Error: URL is not in the list of accepted hosts"),
+                ],
+                style={"color": "red"},
+            ),
+            form_style,
+        )
+
     headers = {}
     for i in range(len(header_keys)):
         headers[header_keys[i]] = header_values[i]
@@ -289,12 +332,16 @@ def save_event_trigger(
             body=body,
         )
     except Exception as e:
-        return html.Div(
-            [
-                html.P("Failed to save Event Trigger"),
-                html.P("Error: " + str(e)),
-            ],
-            style={"color": "red"},
+        form_style["border-color"] = "red"
+        return (
+            html.Div(
+                [
+                    html.P("Failed to save Event Trigger"),
+                    html.P("Error: " + str(e)),
+                ],
+                style={"color": "red"},
+            ),
+            form_style,
         )
     _api_response = dataplane_post(
         "/save-event-trigger/webhook",
@@ -302,20 +349,28 @@ def save_event_trigger(
     )
 
     if _api_response.get("trigger_id"):
-        return html.Div(
-            [
-                html.P("Event Trigger saved successfully"),
-                html.P("Event Trigger ID: " + _api_response["trigger_id"]),
-            ],
-            style={"color": "green"},
+        form_style["border-color"] = "green"
+        return (
+            html.Div(
+                [
+                    html.P("Event Trigger saved successfully"),
+                    html.P("Event Trigger ID: " + _api_response["trigger_id"]),
+                ],
+                style={"color": "green"},
+            ),
+            form_style,
         )
     else:
-        return html.Div(
-            [
-                html.P("Failed to save Event Trigger"),
-                html.P("Error: " + _api_response["error"]),
-            ],
-            style={"color": "red"},
+        form_style["border-color"] = "red"
+        return (
+            html.Div(
+                [
+                    html.P("Failed to save Event Trigger"),
+                    html.P("Error: " + _api_response["error"]),
+                ],
+                style={"color": "red"},
+            ),
+            form_style,
         )
 
 

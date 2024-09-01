@@ -46,6 +46,9 @@ class AppConfig:
             "appcfg", "require_email_verification"
         )
         self.dataplane_url = config.get("dataplane", "url")
+        self.webhook_domain_whitelist = config.get(
+            "appcfg", "webhook_domain_whitelist"
+        ).split(",")
 
         # Providers need the full config to be passed
         self.vaultprovider = vp.VaultProviderFactory.get_provider(config)
@@ -84,7 +87,11 @@ class AppConfig:
     def prod_arguments(self):
         config_file = os.getenv("APP_CONFIG_FILE")
 
-        _valid_config_file = os.path.exists(config_file)
+        try:
+            _valid_config_file = os.path.exists(config_file)
+        except Exception as e:
+            _valid_config_file = False
+
         if not _valid_config_file:
             raise FileNotFoundError(
                 f"Config file not found at {config_file or 'Not provided'} define in env var APP_CONFIG_FILE"
