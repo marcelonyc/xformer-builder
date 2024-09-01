@@ -4,6 +4,8 @@ from pydantic import (
     model_validator,
     field_validator,
     UrlConstraints,
+    AfterValidator,
+    AnyUrl,
 )
 from pydantic.types import List, Any, Annotated
 from pydantic.networks import Url
@@ -12,6 +14,7 @@ from enum import Enum
 from typing_extensions import Self
 from datetime import datetime, timezone
 import iso8601
+from config.app_config import get_settings
 
 
 class XformerRow(BaseModel):
@@ -136,7 +139,15 @@ class WebHookMethods(str, Enum):
 
 
 class WebhookEventMetadata(EventTriggerPayload):
-    url: Annotated[Url, UrlConstraints(allowed_schemes=["http", "https"])]
+
+    def check_allowed_hosts(url: AnyUrl) -> AnyUrl:
+        allowed_urls = get_settings().webhook_domain_whitelist
+
+        if url.host in allowed_urls and url.scheme in {"http", "https"}:
+            return url
+        raise ValueError("It's not in the list of accepted hosts")
+
+    url: Annotated[Url, AfterValidator(check_allowed_hosts)]
     method: WebHookMethods
     headers: Optional[dict]
     body: Optional[str]
