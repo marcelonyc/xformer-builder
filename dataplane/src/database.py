@@ -139,6 +139,9 @@ file_xformer_association = Table(
     Column("user_id", String(48), nullable=False),
     Column("description", String(100), nullable=True),
     Column("xformer_id", String(48), nullable=False),
+    Column("assigned_to", String, nullable=True),
+    Column("failed_event_trigger_id", String, nullable=True),
+    Column("success_event_trigger_id", String, nullable=True),
 )
 
 file_manager = Table(
@@ -150,4 +153,14 @@ file_manager = Table(
     Column("file_size", Integer, nullable=False),
     Column("upload_date", DateTime, nullable=False, default=func.now()),
     Column("last_update_message", String, nullable=True),
+)
+
+event_triggers = Table(
+    "event_triggers",
+    metadata,
+    Column("id", String, primary_key=True),
+    Column("user_id", String(48), nullable=False),
+    Column("event_description", String, nullable=False),
+    Column("event_type", String, nullable=False),
+    Column("event_meta", json_type, nullable=False),
 )

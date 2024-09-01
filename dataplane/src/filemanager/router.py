@@ -68,6 +68,9 @@ async def associate_file_with_xformer(
             file_id=file_id,
             xformer_id=xformer_id,
             description=association.description,
+            assigned_to=association.assigned_to,
+            failed_event_trigger_id=association.failed_event_trigger_id,
+            success_event_trigger_id=association.success_event_trigger_id,
             user_id=request.state.user_profile.id,
         )
         .returning(file_xformer_association.c.file_id)

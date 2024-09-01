@@ -6,7 +6,11 @@ from flask import request
 import code_editor.editor as editor_utils
 from auth.login_handler import require_login
 from dataplane.dataplane import dataplane_get, dataplane_post
-from lib.models import XformerAllRows
+from lib.models import (
+    XformerAllRows,
+    XformerAssociationPayload,
+    EventTriggerList,
+)
 
 
 register_page(
@@ -21,6 +25,9 @@ require_login(__name__)
 # Button to save code. Uses editor_element_index to identify editor
 xformer_select = "xformer-association-select"
 xformer_description = "xformer-association-description"
+xformer_assign_to = "xformer-association-assign-to"
+failed_event_trigger = "xformer-association-failed-event-trigger"
+success_event_trigger = "xformer-association-success-event-trigger"
 columns_display = "xformer-association-columns"
 source_columns_store = "source-columns-store"
 target_columns_store = "target-columns-store"
@@ -47,6 +54,14 @@ def layout(status: str = None):
         xformer_target_columns[_xformer.id] = _xformer.xformer.target_column
         xformer_code[_xformer.id] = _xformer.xformer.code
 
+    _triggers_api_respose = dataplane_get("/list-event-triggers")
+    _triggers_api_respose = EventTriggerList(**_triggers_api_respose)
+    event_triggers = []
+    for _trigger in _triggers_api_respose.triggers:
+        event_triggers.append(
+            {"label": _trigger.event_description, "value": _trigger.id}
+        )
+
     association_modal_object = dbc.Modal(
         [
             dbc.ModalHeader("File/Transformer Association links"),
@@ -60,7 +75,7 @@ def layout(status: str = None):
 
     association_input = [
         dbc.Label(
-            "This form returns a unique URL for each file. This URL can be used to upload the file. The file will be processed with the associated transformer.",
+            "This form returns a unique URL. This URL can be used to upload the file. The file will be processed with the associated transformer.",
             color="normal",
             size="lg",
         ),
@@ -75,7 +90,7 @@ def layout(status: str = None):
             options=xformer_select_options,
             required=True,
         ),
-        dbc.Label("Description", html_for=xformer_select),
+        dbc.Label("Description"),
         dbc.Input(
             id=xformer_description,
             type="text",
@@ -83,6 +98,27 @@ def layout(status: str = None):
             required=True,
             placeholder="Something to remind you who uploads this file",
         ),
+        dbc.Label("Assign To (Client/Partner Name)"),
+        dbc.Input(
+            id=xformer_assign_to,
+            type="text",
+            maxlength=100,
+            required=False,
+            placeholder="Client/Partner Name. You can use this to automate downstream processing",
+        ),
+        dbc.Label("Success Event Trigger"),
+        dbc.Select(
+            id=success_event_trigger,
+            options=event_triggers,
+            required=False,
+        ),
+        dbc.Label("Failed Event Trigger"),
+        dbc.Select(
+            id=failed_event_trigger,
+            options=event_triggers,
+            required=False,
+        ),
+        html.P(),
         html.Div(id=columns_display),
         dcc.Store(id=source_columns_store, data=xformer_source_columns),
         dcc.Store(id=target_columns_store, data=xformer_target_columns),
@@ -177,17 +213,32 @@ def show_columns(selected, source_columns, target_columns, code):
     Input(generate_file_button, "n_clicks"),
     State(xformer_description, "value"),
     State(xformer_select, "value"),
+    State(xformer_assign_to, "value"),
+    State(failed_event_trigger, "value"),
+    State(success_event_trigger, "value"),
 )
-def save_association(n_clicks, description, xformer_id):
+def save_association(
+    n_clicks,
+    description,
+    xformer_id,
+    assign_to,
+    failed_event_trigger,
+    success_event_trigger,
+):
     if not n_clicks:
         return "", False
 
+    _payload = XformerAssociationPayload(
+        xformer_id=xformer_id,
+        description=description,
+        assigned_to=assign_to,
+        failed_event_trigger_id=failed_event_trigger,
+        success_event_trigger_id=success_event_trigger,
+    )
+
     _api_response = dataplane_post(
         "/file-association",
-        data={
-            "xformer_id": xformer_id,
-            "description": description,
-        },
+        data=_payload.model_dump(),
     )
     if "file_id" not in _api_response:
         return (

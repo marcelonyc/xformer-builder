@@ -128,6 +128,14 @@ def create_navbar():
             placement="bottom",
             trigger="hover",
         ),
+        dbc.Popover(
+            "Event Triggers",
+            target="event-triggers-link",
+            id="event-triggers-link-popover",
+            body=True,
+            placement="bottom",
+            trigger="hover",
+        ),
     ]
 
     if _disable_auth_nav:
@@ -149,6 +157,19 @@ def create_navbar():
             n_intervals=0,
         )
     ]
+
+    admin_nav = dbc.DropdownMenu(
+        [
+            dbc.DropdownMenuItem(
+                [html.I(className="fa-solid fa-square-share-nodes fa-xl")],
+                href="/event-triggers",
+                id="event-triggers-link",
+            )
+        ],
+        label=html.I(className="fa-solid fa-gear fa-xl"),
+        nav=True,
+    )
+
     return dbc.NavbarSimple(
         dbc.Row(
             dbc.Col(
@@ -211,9 +232,14 @@ def create_navbar():
                                 disabled=_disable_auth_nav,
                             )
                         ),
+                        dbc.NavItem(admin_nav),
                         dbc.NavItem(
                             dbc.NavLink(
-                                [html.I(className="fa fa-life-ring")],
+                                [
+                                    html.I(
+                                        className="fa-solid fa-life-ring fa-xl"
+                                    )
+                                ],
                                 href="https://github.com/marcelonyc/xformer-builder/issues",
                                 target="_blank",
                                 id="issue-tracker",

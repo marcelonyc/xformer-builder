@@ -1,6 +1,14 @@
-from pydantic import BaseModel, Field, model_validator, field_validator
+from pydantic import (
+    BaseModel,
+    Field,
+    model_validator,
+    field_validator,
+    UrlConstraints,
+)
 from pydantic.types import List, Any, Annotated
+from pydantic.networks import Url
 from typing import Optional
+from enum import Enum
 from typing_extensions import Self
 from datetime import datetime, timezone
 import iso8601
@@ -65,6 +73,9 @@ class XformerAssociationResponse(BaseModel):
 class XformerAssociationPayload(BaseModel):
     xformer_id: str
     description: Optional[str] = None
+    assigned_to: Optional[str] = None
+    failed_event_trigger_id: Optional[str] = None
+    success_event_trigger_id: Optional[str] = None
 
 
 class UploadedFilesResponse(BaseModel):
@@ -92,3 +103,46 @@ class UploadedFilesResponse(BaseModel):
 
 class ListUploadedFilesResponse(BaseModel):
     files: List[UploadedFilesResponse]
+
+
+class EventTriggerTypes(str, Enum):
+    webhook = "webhook"
+    # email = "email"
+
+
+class EventTriggerPayload(BaseModel):
+    id: str
+    event_description: str
+    event_type: EventTriggerTypes
+
+
+class EventTriggerResponse(BaseModel):
+    id: str
+    user_id: str
+    event_description: str
+    event_type: EventTriggerTypes
+    event_meta: Any
+
+
+class EventTriggerList(BaseModel):
+    triggers: List[EventTriggerResponse]
+
+
+class WebHookMethods(str, Enum):
+    get = "GET"
+    post = "POST"
+    put = "PUT"
+    delete = "DELETE"
+
+
+class WebhookEventMetadata(EventTriggerPayload):
+    url: Annotated[Url, UrlConstraints(allowed_schemes=["http", "https"])]
+    method: WebHookMethods
+    headers: Optional[dict]
+    body: Optional[str]
+
+
+class EmailEventMetadata(EventTriggerPayload):
+    to: str
+    subject: str
+    body: str

@@ -6,6 +6,7 @@ from config.app_config import get_settings
 from lib.models import XformerData
 from database import database, file_xformer_association, file_manager, users
 import python_modules.code_validator.code_validator as code_validator
+from eventmanager.service import get_event_trigger_by_id, EventTriggerInvoke
 import base64
 import os
 import io
@@ -71,6 +72,8 @@ def process_file(file_id: str, upload_id: str, filename: str):
     user_select = select(
         file_xformer_association.c.user_id,
         file_xformer_association.c.xformer_id,
+        file_xformer_association.c.success_event_trigger_id,
+        file_xformer_association.c.failed_event_trigger_id,
     ).where(file_xformer_association.c.file_id == file_id)
     try:
         _user_id_result = database.fetch_all_sync(user_select)
@@ -86,6 +89,12 @@ def process_file(file_id: str, upload_id: str, filename: str):
 
     _user_id = _user_id_result[0]["user_id"]
     _xformer_id = _user_id_result[0]["xformer_id"]
+
+    _event_trigger_invoke = EventTriggerInvoke(
+        _user_id_result[0]["success_event_trigger_id"],
+        _user_id_result[0]["failed_event_trigger_id"],
+    )
+
     _, file_extension = os.path.splitext(filename)
     process_file_status(
         file_id,
@@ -95,15 +104,20 @@ def process_file(file_id: str, upload_id: str, filename: str):
         user_id=_user_id,
     )
 
+    # For any errors, we will use this dictionary to send the error message
+    error_dict = {
+        "file_id": file_id,
+        "upload_id": upload_id,
+        "user_id": _user_id,
+    }
+
     try:
         _xformer = get_xformer_from_db(_user_id, _xformer_id)
     except Exception as e:
-        process_file_status(
-            file_id,
-            upload_id,
-            user_id=_user_id,
-            msg="Could not fetch xformer",
-        )
+        error_dict["msg"] = "Could not fetch xformer"
+        process_file_status(**error_dict)
+        error_dict["exception"] = str(e)
+        _event_trigger_invoke.send_failed_trigger(error_dict)
         return
 
     try:
@@ -111,12 +125,10 @@ def process_file(file_id: str, upload_id: str, filename: str):
             file_id, upload_id, file_extension
         )
     except Exception as e:
-        process_file_status(
-            file_id,
-            upload_id,
-            user_id=_user_id,
-            msg="Could not fetch file",
-        )
+        error_dict["msg"] = "Could not fetch file"
+        process_file_status(**error_dict)
+        error_dict["exception"] = str(e)
+        _event_trigger_invoke.send_failed_trigger(error_dict)
         return
 
     # Rename columns
@@ -131,12 +143,10 @@ def process_file(file_id: str, upload_id: str, filename: str):
                         ]
                     ]
     except Exception as e:
-        process_file_status(
-            file_id,
-            upload_id,
-            user_id=_user_id,
-            msg="Could not rename columns",
-        )
+        error_dict["msg"] = "Could not rename columns"
+        process_file_status(**error_dict)
+        error_dict["exception"] = str(e)
+        _event_trigger_invoke.send_failed_trigger(error_dict)
         return
 
     try:
@@ -153,9 +163,10 @@ def process_file(file_id: str, upload_id: str, filename: str):
                     axis=1,
                 )
     except Exception as e:
-        process_file_status(
-            file_id, upload_id, user_id=_user_id, msg="Could not execute code"
-        )
+        error_dict["msg"] = "Could not execute code"
+        process_file_status(**error_dict)
+        error_dict["exception"] = str(e)
+        _event_trigger_invoke.send_failed_trigger(error_dict)
         return
 
     stream = io.StringIO()
@@ -164,24 +175,20 @@ def process_file(file_id: str, upload_id: str, filename: str):
             file_df[_xformer.xformer.target_column].to_csv(index=False)
         )
     except Exception as e:
-        process_file_status(
-            file_id,
-            upload_id,
-            user_id=_user_id,
-            msg="Could not save trasnformed file to memory",
-        )
+        error_dict["msg"] = "Could not save transformed file to memory"
+        process_file_status(**error_dict)
+        error_dict["exception"] = str(e)
+        _event_trigger_invoke.send_failed_trigger(error_dict)
         return
 
     try:
         filestoreprovider.put_file(file_id, upload_id, stream)
         file_size = sys.getsizeof(stream.getvalue())
     except Exception as e:
-        process_file_status(
-            file_id,
-            upload_id,
-            user_id=_user_id,
-            msg="Could not save transformed file",
-        )
+        error_dict["msg"] = "Could not save transformed file"
+        process_file_status(**error_dict)
+        error_dict["exception"] = str(e)
+        _event_trigger_invoke.send_failed_trigger(error_dict)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Could not write to filestore",
@@ -192,6 +199,8 @@ def process_file(file_id: str, upload_id: str, filename: str):
     process_file_status(
         file_id, upload_id, file_size, user_id=_user_id, msg="File processed"
     )
+    error_dict["msg"] = "File processed"
+    _event_trigger_invoke.send_success_trigger(error_dict)
 
 
 async def validate_file_id(file_id: str):

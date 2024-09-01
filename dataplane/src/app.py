@@ -13,6 +13,7 @@ from xformers.router import router as xformers_router
 from filemanager.router import router as filemanager_router
 from filexchange.router import router as filexchange_router
 from system.router import router as system_router
+from eventmanager.router import router as event_trigger_router
 import os
 import logging
 
@@ -46,6 +47,8 @@ app.include_router(auth_router, tags=["App token Login endpoint"])
 app.include_router(xformers_router, tags=["Xformer manager"])
 
 app.include_router(filemanager_router, tags=["File manager"])
+
+app.include_router(event_trigger_router, tags=["Event Trigger manager"])
 
 # WARNING - These routes are not protected by the auth service
 app.include_router(filexchange_router, tags=["File Xchange"])
