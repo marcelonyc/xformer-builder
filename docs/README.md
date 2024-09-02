@@ -16,7 +16,7 @@ Live Demo: [Here](https://marcelonyc.pythonanywhere.com/)
 - Share a unique URL to upload/download files
 - Trigger Webhook when a file is processed
 
-![Application Flow](/assets/ApplicationFlow.drawio.png)
+![Application Flow](assets/ApplicationFlow.drawio.png)
 
 
 ## Getting Started
@@ -74,13 +74,13 @@ Contributions are welcome! If you would like to contribute to Xformer Builder, p
 
 Here are some screenshots of the Xformer Builder application:
 
-![Screenshot 1](/assets/Screenshot%202024-07-13%20at%2012.52.17 PM.png)
+![Screenshot 1](assets/Screenshot%202024-07-13%20at%2012.52.17 PM.png)
 ---
-![Screenshot 1](/assets/Screenshot%202024-07-13%20at%201.08.00 PM.png)
+![Screenshot 1](assets/Screenshot%202024-07-13%20at%201.08.00 PM.png)
 ---
 ### Expand row to see transformation resutls
 <a name="expandit"></a>
-![Screenshot 1](/assets/Screenshot%202024-07-13%20at%202.56.21 PM.png)
+![Screenshot 1](assets/Screenshot%202024-07-13%20at%202.56.21 PM.png)
 
 ## Technologies and tools in this project
 
