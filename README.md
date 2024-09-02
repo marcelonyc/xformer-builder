@@ -60,6 +60,9 @@ Try it in the demo environment: [Demo](https://marcelonyc.pythonanywhere.com)
 
 The transformer is saved into multiple lists. Right now is just a print to the console. The actual code is base64 encoded.
 
+## Application Configuration
+To customize the application configuration, review the [CONFIG.INI](docs/CONFIG.md) document
+
 ## Contributing
 
 Contributions are welcome! If you would like to contribute to Xformer Builder, please follow these guidelines:

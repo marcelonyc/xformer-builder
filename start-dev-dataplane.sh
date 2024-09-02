@@ -10,7 +10,7 @@ GUNICORN_CONFIG_FILE="$(pwd)/dataplane/gunicorn/gunicorn_conf.py"
 
 
 
-CONFIG_FILE=$1
+export APP_CONFIG_FILE=$1
 cd dataplane/src
 
 export PYTHONPATH=$PYTHONPATH:../../
