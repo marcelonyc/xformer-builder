@@ -1,4 +1,3 @@
-# Import necessary libraries
 import dash_bootstrap_components as dbc
 from dash import (
     html,
@@ -11,17 +10,13 @@ from dash import (
     Patch,
     ALL,
 )
-import base64
 from pydantic import AnyUrl
 import uuid
 import json
-from flask import request
-import code_editor.editor as editor_utils
 from auth.login_handler import require_login
 from dataplane.dataplane import dataplane_get, dataplane_post
 from lib.models import (
     EventTriggerList,
-    EventTriggerPayload,
     EventTriggerTypes,
     WebhookEventMetadata,
 )
@@ -54,6 +49,8 @@ form_style = {
     "border": "2px",
     "border-style": "solid",
     "border-color": "black",
+    "margin": "10px",
+    "margin-top": "20px",
 }
 existing_trigger_id = "existing-trigger-id"
 save_event_trigger_button = "save-event-trigger"
