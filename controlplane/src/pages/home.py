@@ -43,7 +43,7 @@ def layout(new_xformer: bool = True):
             "class": "fa-solid fa-pen-to-square fa-xl",
             "href": "/edit-xformer",
             "text": "Edit and existing transformer. "
-            "Warning: This will overwrite the existing transformer",
+            "Warning: This will overwrite the existing transformer and change future file uploads",
         },
         {
             "number": "fa-solid fa-4 fa-xl",
