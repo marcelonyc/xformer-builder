@@ -10,7 +10,7 @@ GUNICORN_CONFIG_FILE="$(pwd)/controlplane/gunicorn/gunicorn_conf.py"
 
 
 
-CONFIG_FILE=$1
+export APP_CONFIG_FILE=$1
 cd controlplane/src
 
 gunicorn -k gevent --forwarded-allow-ips "*" -c ${GUNICORN_CONFIG_FILE} dash_app:application
