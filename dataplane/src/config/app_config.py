@@ -1,11 +1,13 @@
 import yaml
 import os
 import configparser
+from configparser import ConfigParser
 import filestoreprovider.filestoreprovider as fsp
 import vaultprovider.vaultprovider as vp
 import backgroundprovider.backgroundprovider as bp
 import logging
 from functools import lru_cache
+from emailprovider.email import EmailProvider
 
 
 class AppConfig:
@@ -25,7 +27,11 @@ class AppConfig:
 
         self.APP_ROOT = os.getenv("APP_ROOT")
         self.DASH_APP_ROOT = os.getenv("DASH_APP_ROOT")
-        self.APP_CONFIG_FILE = os.path.join(self.APP_ROOT, "config.ini")
+
+        self.APP_CONFIG_FILE = os.getenv("APP_CONFIG_FILE")
+
+        if self.APP_CONFIG_FILE is None or self.APP_CONFIG_FILE == "":
+            self.APP_CONFIG_FILE = os.path.join(self.APP_ROOT, "config.ini")
 
         if self.run_mode == "prod":
             self.prod_arguments()
@@ -33,6 +39,12 @@ class AppConfig:
         config = configparser.ConfigParser()
         config.sections()
         config.read(self.APP_CONFIG_FILE)
+
+        # Providers need the full config to be passed
+        self.vaultprovider = vp.VaultProviderFactory.get_provider(config)
+        # After vault provider is initialized, we can parse the secrets in config
+        # These are values like ${vault:secret_name} in config.ini
+        self.parse_vault_secrets(config)
 
         self.APP_TITLE = config.get("appcfg", "title")
         self.allow_plus_in_email = config.getboolean(
@@ -46,18 +58,30 @@ class AppConfig:
             "appcfg", "require_email_verification"
         )
         self.dataplane_url = config.get("dataplane", "url")
+        self.controlplane_url = config.get("controlplane", "url")
+
         self.webhook_domain_whitelist = config.get(
             "appcfg", "webhook_domain_whitelist"
         ).split(",")
 
-        # Providers need the full config to be passed
-        self.vaultprovider = vp.VaultProviderFactory.get_provider(config)
         self.filestoreprovider = fsp.FileStoreProviderFactory.get_provider(
             config, self.vaultprovider
         )
         self.backgroundprovider = bp.BackgroundProviderFactory.get_provider(
             config
         )
+
+        # SMTP settings
+        if config.getboolean("smtp", "enabled"):
+            self.smtp_enabled = True
+            self.smtp_host = config.get("smtp", "host")
+            self.smtp_port = config.getint("smtp", "port")
+            self.smtp_user = config.get("smtp", "user")
+            self.smtp_password = config.get("smtp", "password")
+            self.smtp_sender = config.get("smtp", "from")
+        else:
+            self.smtp_enabled = False
+
         self.dataplane_token = self.vaultprovider.get_secret("dataplane_token")
         if not self.dataplane_token:
             raise ValueError(
@@ -83,6 +107,21 @@ class AppConfig:
         logging.getLogger().setLevel(
             _log_level.get(self.log_level, logging.INFO)
         )
+
+        if config.getboolean("smtp", "enabled"):
+            self.emailprovider = EmailProvider(self)
+
+    def parse_vault_secrets(self, config: ConfigParser) -> ConfigParser:
+        for section in config.sections():
+            for key in config[section]:
+                if "${vault:" in config[section][key]:
+                    secret_name = (
+                        config[section][key].split("${vault:")[1].split("}")[0]
+                    )
+                    config[section][key] = self.vaultprovider.get_secret(
+                        secret_name
+                    )
+        return config
 
     def prod_arguments(self):
         config_file = os.getenv("APP_CONFIG_FILE")

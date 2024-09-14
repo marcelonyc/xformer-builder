@@ -23,6 +23,7 @@ class TokenManager:
         self.token = None
         self.salt = None
         self.id = None
+        self.username = None
         self.id_position = 8
 
     def generate_salt(self):

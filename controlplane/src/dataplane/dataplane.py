@@ -80,3 +80,25 @@ def dataplane_login(app_token: str):
     response = dataplane_get("/login", headers=header, auth=False)
 
     return response
+
+
+def dataplane_platform_post(
+    endpoint: str,
+    data: dict = None,
+    headers: dict = None,
+):
+
+    headers = {"Authorization": f"Bearer {config.dataplane_token}"}
+    try:
+        response = requests.post(
+            config.dataplane_url + endpoint,
+            data=json.dumps(data),
+            headers=headers,
+        )
+    except Exception as e:
+        return {"error": str(e)}
+
+    if response.status_code != 200:
+        return {"error": f"{response.status_code} - {response.text}"}
+
+    return response.json()
