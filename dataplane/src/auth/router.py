@@ -80,6 +80,9 @@ async def reset_password(
 
 @router.post("/token-reset/{reset_code}")
 async def reset_password(
+    credentials: Annotated[
+        HTTPAuthorizationCredentials, Depends(service.validate_platform_token)
+    ],
     reset_code: str,
 ) -> JSONResponse:
 
