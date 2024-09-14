@@ -35,6 +35,11 @@ def layout(status: str = None):
                     href="/register",
                     target="_blank",
                 ),
+                dbc.NavLink(
+                    "Forgot your token? Click here to reset it",
+                    href="/forgot_token",
+                    target="_blank",
+                ),
             ],
             color="secondary",
         ),

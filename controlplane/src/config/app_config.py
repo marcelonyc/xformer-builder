@@ -2,6 +2,7 @@ from functools import lru_cache
 import yaml
 import os
 import configparser
+from configparser import ConfigParser
 import sys
 from vaultprovider import vaultprovider as vp
 
@@ -20,12 +21,21 @@ class AppConfig:
         self.APP_ROOT = os.getenv("APP_ROOT")
         self.DASH_APP_ROOT = os.getenv("DASH_APP_ROOT")
 
-        self.APP_CONFIG_FILE = os.getenv(
-            "APP_CONFIG_FILE", os.path.join(self.APP_ROOT, "config.ini")
-        )
+        self.APP_CONFIG_FILE = os.getenv("APP_CONFIG_FILE")
+
+        if self.APP_CONFIG_FILE is None or self.APP_CONFIG_FILE == "":
+            self.APP_CONFIG_FILE = os.path.join(self.APP_ROOT, "config.ini")
+
         config = configparser.ConfigParser()
         config.sections()
         config.read(self.APP_CONFIG_FILE)
+
+        # Providers need the full config to be passed
+        self.vaultprovider = vp.VaultProviderFactory.get_provider(config)
+        # After vault provider is initialized, we can parse the secrets in config
+        # These are values like ${vault:secret_name} in config.ini
+        self.parse_vault_secrets(config)
+
         self.APP_TITLE = config.get("appcfg", "title")
         self.db_url = config.get("appcfg", "db_url")
         self.debug = config.getboolean("appcfg", "debug")
@@ -39,9 +49,20 @@ class AppConfig:
             "appcfg", "webhook_domain_whitelist"
         ).split(",")
 
-        self.vaultprovider = vp.VaultProviderFactory.get_provider(config)
-
         self.dataplane_token = self.vaultprovider.get_secret("dataplane_token")
+        self.controlplane_url = config.get("controlplane", "url")
+
+    def parse_vault_secrets(self, config: ConfigParser) -> ConfigParser:
+        for section in config.sections():
+            for key in config[section]:
+                if "${vault:" in config[section][key]:
+                    secret_name = (
+                        config[section][key].split("${vault:")[1].split("}")[0]
+                    )
+                    config[section][key] = self.vaultprovider.get_secret(
+                        secret_name
+                    )
+        return config
 
 
 @lru_cache

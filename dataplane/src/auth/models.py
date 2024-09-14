@@ -4,8 +4,8 @@ from typing import Optional
 
 class User(BaseModel):
     username: str
-    email: str | None = None
-    full_name: str | None = None
+    email: EmailStr = None
+    full_name: str = None
     disabled: bool | None = None
 
 

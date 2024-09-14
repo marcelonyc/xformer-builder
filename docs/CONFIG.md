@@ -71,6 +71,11 @@ Endpoint url for dataplane
 [dataplane]
 url=http://localhost:9000 <span style="color: green;"># Endpoint where data plane is listening</span>
 
+### controlplane
+Endpoint url for dataplane
+[controlplane]
+url=http://localhost:8050 <span style="color: green;"># URL of controlplane. We use this to contruct urls from the dataplane (like password reset url)</span>
+
 ### background provider
 
 Background tasks execution provider. A class is defined in the application to handle background tasks. Currently on FastApi Backgroundtasks is implemented

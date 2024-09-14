@@ -112,7 +112,7 @@ users = Table(
     Column("name", String, nullable=False),
     Column("email", String, nullable=False),
     Column("id", String, primary_key=True, nullable=False),
-    Column("username", String, nullable=False),
+    Column("username", String, nullable=False, unique=True),
     Column("salt", LargeBinary, nullable=False),
     Column("hashed_token", LargeBinary, nullable=False),
     Column("description", String, nullable=False),
@@ -163,4 +163,12 @@ event_triggers = Table(
     Column("event_description", String, nullable=False),
     Column("event_type", String, nullable=False),
     Column("event_meta", json_type, nullable=False),
+)
+
+password_reset = Table(
+    "password_reset",
+    metadata,
+    Column("email", String(60), nullable=False),
+    Column("reset_code", String(100), nullable=False),
+    Column("expires_at", DateTime, nullable=False),
 )

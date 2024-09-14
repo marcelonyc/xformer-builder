@@ -9,8 +9,10 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+import os
 ${imports if imports else ""}
 
+os.environ['RUN_MODE'] = 'alembic'
 from config.app_config import get_settings
 app_config = get_settings()
 db_type='postgresql'

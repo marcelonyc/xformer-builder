@@ -3,7 +3,8 @@ from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import HTTPException, status, Depends, Request
 from fastapi.security import HTTPBearer
 from typing import Annotated
-from database import database, users, xformer_store
+import datetime
+from database import database, users, xformer_store, password_reset
 from auth.models import (
     RegisterUser,
     UserInDB,
@@ -12,6 +13,9 @@ from auth.models import (
     Token,
     User,
 )
+import os
+from secrets import token_urlsafe
+
 from sqlalchemy import insert, select, update, func
 from config.app_config import get_settings
 from auth.utils import TokenManager
@@ -61,7 +65,6 @@ async def validate_app_token(
 
 
 def validate_platform_token(
-    request: Request,
     security: Annotated[HTTPAuthorizationCredentials, Depends(security)],
 ) -> dict:
 
@@ -77,7 +80,6 @@ def validate_platform_token(
 
     _validation = {}
     if get_user_query != security.credentials:
-        raise credentials_exception
         _validation["status"] = False
     else:
         _validation["status"] = True
@@ -89,3 +91,49 @@ def get_user(db, username: str):
     if username in db:
         user_dict = db[username]
         return UserInDB(**user_dict)
+
+
+async def send_token_reset_email(email: str):
+
+    select_query = select(users).where(users.c.email == email)
+    try:
+        user = await database.fetch_all(select_query)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+    if len(user) == 0:
+        return
+
+    reset_code = token_urlsafe(65)
+
+    insert_statement = (
+        insert(password_reset)
+        .values(
+            email=email,
+            reset_code=reset_code,
+            expires_at=datetime.datetime.now() + datetime.timedelta(hours=12),
+        )
+        .returning(password_reset.c.email)
+    )
+    try:
+        await database.execute(insert_statement)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error sending email",
+        )
+
+    emailprovider = get_settings().emailprovider
+    controlplane_url = get_settings().controlplane_url
+    site_name = get_settings().APP_TITLE
+
+    emailprovider.send_email(
+        to=email,
+        subject="{}: Token reset request".format(site_name),
+        body=f"{site_name}\nClick here to reset your password: {controlplane_url}/reset_token/{reset_code}\n"
+        "This link will expire in 12 hours",
+    )
+
+    return reset_code
