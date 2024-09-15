@@ -109,19 +109,24 @@ def layout(status: str = None):
             required=False,
             placeholder="Client/Partner Name. You can use this to automate downstream processing",
         ),
-        dbc.Label("Success Event Trigger", hidden=no_triggers),
-        dbc.Select(
-            id=success_event_trigger,
-            options=event_triggers,
-            required=False,
-            disabled=no_triggers,
-        ),
-        dbc.Label("Failed Event Trigger", hidden=no_triggers),
-        dbc.Select(
-            id=failed_event_trigger,
-            options=event_triggers,
-            required=False,
-            disabled=no_triggers,
+        html.Div(
+            [
+                dbc.Label("Success Event Trigger", hidden=no_triggers),
+                dbc.Select(
+                    id=success_event_trigger,
+                    options=event_triggers,
+                    required=False,
+                    disabled=no_triggers,
+                ),
+                dbc.Label("Failed Event Trigger", hidden=no_triggers),
+                dbc.Select(
+                    id=failed_event_trigger,
+                    options=event_triggers,
+                    required=False,
+                    disabled=no_triggers,
+                ),
+            ],
+            hidden=no_triggers,
         ),
         html.P(),
         html.Div(id=columns_display),
