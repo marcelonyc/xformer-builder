@@ -2,6 +2,8 @@
 
 The application reads the provided config.ini file to initialize the application. You can provide the location of this file (full path and name) to the `start-..` scripts.
 
+When values in the config.ini require secrets from the vault provider use the syntax ${vault:<vault key>}. The values are replaced when the config file is parsed.
+
 ## Sections documentation
 
 ### appcfg

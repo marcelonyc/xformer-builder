@@ -55,12 +55,15 @@ def layout(status: str = None):
         xformer_code[_xformer.id] = _xformer.xformer.code
 
     _triggers_api_respose = dataplane_get("/list-event-triggers")
-    _triggers_api_respose = EventTriggerList(**_triggers_api_respose)
     event_triggers = []
-    for _trigger in _triggers_api_respose.triggers:
-        event_triggers.append(
-            {"label": _trigger.event_description, "value": _trigger.id}
-        )
+    no_triggers = True
+    if "detail" not in _triggers_api_respose:
+        no_triggers = False
+        _triggers_api_respose = EventTriggerList(**_triggers_api_respose)
+        for _trigger in _triggers_api_respose.triggers:
+            event_triggers.append(
+                {"label": _trigger.event_description, "value": _trigger.id}
+            )
 
     association_modal_object = dbc.Modal(
         [
@@ -106,17 +109,19 @@ def layout(status: str = None):
             required=False,
             placeholder="Client/Partner Name. You can use this to automate downstream processing",
         ),
-        dbc.Label("Success Event Trigger"),
+        dbc.Label("Success Event Trigger", hidden=no_triggers),
         dbc.Select(
             id=success_event_trigger,
             options=event_triggers,
             required=False,
+            disabled=no_triggers,
         ),
-        dbc.Label("Failed Event Trigger"),
+        dbc.Label("Failed Event Trigger", hidden=no_triggers),
         dbc.Select(
             id=failed_event_trigger,
             options=event_triggers,
             required=False,
+            disabled=no_triggers,
         ),
         html.P(),
         html.Div(id=columns_display),
