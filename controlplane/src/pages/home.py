@@ -28,7 +28,7 @@ def layout(new_xformer: bool = True):
             "number": "fa-solid fa-1 fa-xl",
             "class": "fa-solid fa-cash-register fa-xl",
             "href": "/register",
-            "text": "Register for an Account. You will get a token to login. Don't lose it!",
+            "text": "Register for an Account. You will get a token to login.",
         },
         {
             "number": "fa-solid fa-2 fa-xl",
