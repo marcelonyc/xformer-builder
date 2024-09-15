@@ -135,7 +135,7 @@ async def reset_password(
         await database.execute(update_statement)
     except Exception as e:
         return JSONResponse(
-            content=f"Failed to update account {str(e)}",
+            content=f"Failed to update account",
             status_code=400,
         )
 
