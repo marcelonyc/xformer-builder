@@ -61,7 +61,14 @@ def generate_xformers_from_api(
     if len(_api_response) == 0:
         return []
 
-    xformer_data = XformerData(**_api_response["rows"][0])
+    return xformer_from_json(
+        _api_response["rows"][0], editor_button, editor_code
+    )
+
+
+def xformer_from_json(xformer_json, editor_button, editor_code):
+
+    xformer_data = XformerData(**xformer_json)
     columns = xformer_data.xformer.source_column
     code = xformer_data.xformer.code
     source_type = xformer_data.xformer.source_type

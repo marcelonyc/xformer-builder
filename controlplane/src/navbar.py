@@ -89,6 +89,14 @@ def create_navbar():
             trigger="hover",
         ),
         dbc.Popover(
+            "Import a transformer JSON file",
+            target="xformer-import-menu-link",
+            id="xformer-import-menu-link-popover",
+            body=True,
+            placement="bottom",
+            trigger="hover",
+        ),
+        dbc.Popover(
             "Edit transformer",
             target="edit-xformer-menu-link",
             id="edit-xformer-menu-link-popover",
@@ -194,6 +202,19 @@ def create_navbar():
                                 href="/xformer-builder",
                                 target="_blank",
                                 id="xformer-builder-menu-link",
+                                disabled=_disable_auth_nav,
+                            )
+                        ),
+                        dbc.NavItem(
+                            dbc.NavLink(
+                                [
+                                    html.I(
+                                        className="fa-solid fa-file-import fa-xl"
+                                    )
+                                ],
+                                href="/xformer-builder?new_xformer=False&import_xformer=True",
+                                target="_blank",
+                                id="xformer-import-menu-link",
                                 disabled=_disable_auth_nav,
                             )
                         ),

@@ -51,7 +51,7 @@ class XformerLists(BaseModel):
 
 class XformerData(BaseModel):
     # Read get xformer response
-    id: str
+    id: Optional[str] = None
     name: str
     description: str
     xformer: XformerLists

@@ -3,22 +3,22 @@ import os
 import argparse
 
 
-def upgrade_config(config_file):
+def upgrade_config(current_config, default_config, new_config):
     config = configparser.ConfigParser()
-    config.read(config_file)
-    config.set("DEFAULT", "version", "1.0")
-    with open(config_file, "w") as configfile:
-        config.write(configfile)
+    config.read(default_config)
+    config.read(current_config)
+    config.write(open(new_config, "w"))
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("current_config", help="Config file to upgrade")
-    parser.add_argument("config_file", help="Config file to upgrade")
+    parser.add_argument("-c", "--current_config", help="Current Config file")
+    parser.add_argument("-d", "--default_config", help="Current Config file")
+    parser.add_argument("-n", "--new_config", help="New Config file")
     args = parser.parse_args()
     return args
 
 
 args = main()
 
-upgrade_config(args.config_file)
+upgrade_config(args.current_config, args.default_config, args.new_config)
