@@ -36,6 +36,8 @@ To get started with Xformer Builder, follow these steps:
 
 Try it in the demo environment: [Demo](https://marcelonyc.pythonanywhere.com)
 
+Suggestions for deployment architecture: [Here](ArchitectureSuggestions.md)
+
 ## Create a transformer
 
 1. Upload CSV/XLS file: Click on "Upload Sample CSV/XLS file" and select the desired CSV/XLS file from your local machine.
