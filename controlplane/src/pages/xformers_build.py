@@ -14,6 +14,7 @@ from dash import (
 )
 import pandas as pd
 import io
+import json
 import numpy as np
 import code_editor.editor as editor_utils
 import code_editor.callbacks as editor_callbacks
@@ -59,11 +60,19 @@ xformer_name_input = "transformer-name"
 editor_alerts_modal = "editor-alerts-model"
 editor_alerts_modal_body = "editor-alerts-modal-body"
 editor_saved_status_msg = "editor-saved-status-msg"
+xformer_export_check = "xformer-export-check"
+upload_exported_xformer = "upload-exported-xformer"
+upload_sample_data = "upload-sample-data"
+xformer_json_exported_content = "xform-json-exported-content"
 
 # Button to save code. Uses editor_element_index to identify editor
 
 
-def layout(new_xformer: bool = True, xformer_name: str = ""):
+def layout(
+    new_xformer: bool = True,
+    xformer_name: str = "",
+    import_xformer: bool = False,
+):
     disable_save_all = False
     controls_div = html.Div(
         id="editor-controls-div",
@@ -76,7 +85,7 @@ def layout(new_xformer: bool = True, xformer_name: str = ""):
             "border": "10px",
         },
     )
-    if string_to_bool(new_xformer):
+    if string_to_bool(new_xformer) and not string_to_bool(import_xformer):
         upload_children = ["Upload Sample CSV/XLS File. Limit 2500 bytes"]
         upload_style = {
             "width": "100%",
@@ -94,13 +103,13 @@ def layout(new_xformer: bool = True, xformer_name: str = ""):
         accordion_body = None
         sample_upload_widget = dcc.Upload(
             upload_children,
-            id="upload-sample-data",
+            id=upload_sample_data,
             max_size=2500,
             style=upload_style,
             className_reject="btn-danger bordeer-danger",
             disabled=not new_xformer,
         )
-    else:
+    elif not string_to_bool(import_xformer):
         upload_children = []
         upload_style = {}
         button_row_hidden = False
@@ -109,6 +118,30 @@ def layout(new_xformer: bool = True, xformer_name: str = ""):
             xformer_name, editor_button, editor_code
         )
         sample_upload_widget = None
+    else:
+        upload_children = ["Upload Exported Transformer's JSON"]
+        upload_style = {
+            "width": "100%",
+            "height": "60px",
+            "lineHeight": "60px",
+            "borderWidth": "1px",
+            "borderStyle": "dashed",
+            "borderRadius": "5px",
+            "textAlign": "center",
+            "margin": "10px",
+        }
+
+        button_row_hidden = True
+        name_read_only = False
+        accordion_body = None
+        sample_upload_widget = dcc.Upload(
+            upload_children,
+            id=upload_exported_xformer,
+            max_size=2500,
+            style=upload_style,
+            className_reject="btn-danger bordeer-danger",
+            disabled=not new_xformer,
+        )
 
     status_div = html.Div(
         dbc.Row(
@@ -185,6 +218,11 @@ def layout(new_xformer: bool = True, xformer_name: str = ""):
                                 ),
                                 style={"align": "right"},
                             ),
+                            dbc.Switch(
+                                id=xformer_export_check,
+                                label="Export on save",
+                                value=False,
+                            ),
                             dbc.NavItem(
                                 dbc.NavLink(
                                     [
@@ -232,7 +270,7 @@ def layout(new_xformer: bool = True, xformer_name: str = ""):
             dcc.Interval(id=editor_save_intervals, interval=1000),
             dbc.Modal(
                 [
-                    dbc.ModalHeader("Editor Alert"),
+                    dbc.ModalHeader("Editor Status"),
                     dbc.ModalBody(id=editor_alerts_modal_body),
                 ],
                 id=editor_alerts_modal,
@@ -315,17 +353,17 @@ editor_callbacks.save_editor_callback(
 
 
 @callback(
-    Output("upload-sample-data", "disabled"),
-    Output("upload-sample-data", "style"),
-    Output("upload-sample-data", "children"),
+    Output(upload_sample_data, "disabled"),
+    Output(upload_sample_data, "style"),
+    Output(upload_sample_data, "children"),
     Output("xformers-accordion", "children"),
     Output(editor_modal, "hidden"),
     Output(editor_button_row, "hidden"),
-    Input("upload-sample-data", "contents"),
-    State("upload-sample-data", "filename"),
+    Input(upload_sample_data, "contents"),
+    State(upload_sample_data, "filename"),
     prevent_initial_call=True,
 )
-def upload_sample_data(contents, filename):
+def upload_sample_data_func(contents, filename):
     """
     Uploads sample data and generates xformers based on the data.
 
@@ -454,6 +492,7 @@ def auto_save_all_code(
     State({"type": column_xformer_status, "index": ALL}, "value"),
     State(xformer_name_input, "value"),
     State(xformer_name_input, "readonly"),
+    State(xformer_export_check, "value"),
     prevent_initial_call=True,
 )
 def save_all_code(
@@ -471,6 +510,7 @@ def save_all_code(
     column_status,
     xformer_name,
     name_read_only,
+    xformer_export,
 ):
     """
     Save all code and perform syntax check.
@@ -500,7 +540,7 @@ def save_all_code(
             - saved_msg (str): Message indicating the save status.
             - is_saved (bool): Flag indicating if the transformer is saved.
     """
-    if xformer_name is None:
+    if xformer_name is None or xformer_name == "":
         return (
             target_data_list,
             target_data_class,
@@ -574,7 +614,33 @@ def save_all_code(
     }
     response = dataplane_post("/save-xformer", data=payload)
 
-    return return_values + (True, saved_msg, True)
+    if xformer_export:
+        msg = "Transformer Saved Successfully"
+        saved_msg = card = dbc.Card(
+            dbc.CardBody(
+                [
+                    html.H4(msg, className="card-title"),
+                    html.P(),
+                    html.Div(
+                        json.dumps(payload),
+                        id=xformer_json_exported_content,
+                        hidden=True,
+                    ),
+                    dbc.Button(
+                        "Download JSON",
+                        id=f"{xformer_json_exported_content}-button",
+                        color="primary",
+                    ),
+                    dcc.Download(
+                        id=f"{xformer_json_exported_content}-download"
+                    ),
+                ]
+            ),
+        )
+
+    return_values = return_values + (True, saved_msg, True)
+
+    return return_values
 
 
 @callback(
@@ -757,16 +823,6 @@ def test_code(
         accordion_class,
         column_status,
     )
-    # return_values = xformer_validator(
-    #     editor_button,
-    #     code_list,
-    #     editor_element_index,
-    #     sample_data_list,
-    #     target_data_list,
-    #     target_data_class,
-    #     accordion_class,
-    #     column_status,
-    # )
 
     return_values.validate()
     is_hide_editor = (False,)
@@ -781,3 +837,56 @@ def test_code(
             is_hide_editor = (True,)
 
     return return_values.return_values_in_tuple() + is_hide_editor
+
+
+@callback(
+    Output(upload_exported_xformer, "disabled"),
+    Output(upload_exported_xformer, "style"),
+    Output(upload_exported_xformer, "children"),
+    Output("xformers-accordion", "children", allow_duplicate=True),
+    Output(editor_modal, "hidden", allow_duplicate=True),
+    Output(editor_button_row, "hidden", allow_duplicate=True),
+    Input(upload_exported_xformer, "contents"),
+    State(upload_exported_xformer, "filename"),
+    prevent_initial_call=True,
+)
+def upload_xformer_export(contents, filename):
+    """
+    Uploads sample data and generates xformers based on the data.
+
+    Args:
+        contents (str): The contents of the file to be uploaded.
+        filename (str): The name of the file.
+
+    Returns:
+        tuple: A tuple containing the following elements:
+            - bool: Indicates if the upload was successful (True) or not (False).
+            - None: Placeholder for an error message (not used in this implementation).
+            - None: Placeholder for additional information (not used in this implementation).
+            - list: A list of xformers generated from the sample data.
+            - bool: Indicates if the upload was successful (True) or not (False).
+            - bool: Indicates if there was an error during the upload (True) or not (False).
+    """
+    content_type, content_string = contents.split(",")
+    decoded = base64.b64decode(content_string).decode("utf-8")
+
+    xformer_rows = xformers_utils.xformer_from_json(
+        json.loads(decoded), editor_button, editor_code
+    )
+
+    return True, None, None, xformer_rows, True, False
+
+
+@callback(
+    Output(f"{xformer_json_exported_content}-download", "data"),
+    Input(f"{xformer_json_exported_content}-button", "n_clicks"),
+    State(xformer_json_exported_content, "children"),
+    prevent_initial_call=True,
+)
+def download_xformer_json(n_clicks, xformer_json_exported_content):
+
+    xformer_dict = json.loads(xformer_json_exported_content)
+    return dict(
+        content=str(xformer_json_exported_content),
+        filename=f"{xformer_dict['name']}.json",
+    )
