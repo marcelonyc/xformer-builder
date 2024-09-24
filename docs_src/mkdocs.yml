@@ -1,0 +1,29 @@
+site_name: Data Onboarding
+site_url: https://marcelonyc.github.io/xformer-builder
+theme:
+  name: material
+  features:
+    - navigation.tracking
+    - navigation.path
+    - navigation.footer
+    - navigation.indexes
+    - content.code.copy
+    - content.code.select
+    - content.tabs.link
+  palette:
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+nav:
+  - Home: README.md
+  - Config: CONFIG.md
+  - Architecture: ArchitectureSuggestions.md

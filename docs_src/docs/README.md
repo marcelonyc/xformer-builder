@@ -59,7 +59,7 @@ Suggestions for deployment architecture: [Here](ArchitectureSuggestions.md)
 The transformer is saved into multiple lists. Right now is just a print to the console. The actual code is base64 encoded.
 
 ## Application Configuration
-To customize the application configuration, review the [CONFIG.INI](docs/CONFIG.md) document
+To customize the application configuration, review the [CONFIG.INI](CONFIG.md) document
 
 ## Contributing
 
