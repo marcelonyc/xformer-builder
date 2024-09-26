@@ -8,13 +8,11 @@
       
       
       
-        <link rel="canonical" href="https://marcelonyc.github.io/xformer-builder/ArchitectureSuggestions/">
+        <link rel="canonical" href="https://marcelonyc.github.io/xformer-builder/Docker/">
       
       
-        <link rel="prev" href="../CONFIG/">
+        <link rel="prev" href="../ArchitectureSuggestions/">
       
-      
-        <link rel="next" href="../Docker/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -22,7 +20,7 @@
     
     
       
-        <title>Architecture - Data Onboarding</title>
+        <title>Docker - Data Onboarding</title>
       
     
     
@@ -74,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deployment-architecture-ideas" class="md-skip">
+        <a href="#run-in-docker" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Architecture
+              Docker
             
           </span>
         </div>
@@ -290,6 +288,26 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../ArchitectureSuggestions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -306,7 +324,7 @@
           
   
   <span class="md-ellipsis">
-    Architecture
+    Docker
   </span>
   
 
@@ -317,7 +335,7 @@
         
   
   <span class="md-ellipsis">
-    Architecture
+    Docker
   </span>
   
 
@@ -339,37 +357,46 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#firewall" class="md-nav__link">
+  <a href="#build-the-image" class="md-nav__link">
     <span class="md-ellipsis">
-      Firewall
+      Build the image
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#reverse-proxy" class="md-nav__link">
+  <a href="#run-in-docker_1" class="md-nav__link">
     <span class="md-ellipsis">
-      Reverse Proxy
+      Run in Docker
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nginx-example-i" class="md-nav__link">
-    <span class="md-ellipsis">
-      NGINX Example I
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="NGINX Example I">
+    <nav class="md-nav" aria-label="Run in Docker">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#forward-all-calls-to-the-controlplane" class="md-nav__link">
+  <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Forward all calls to the Controlplane
+      Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-from-local-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run from local build
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-from-release-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run from release build
     </span>
   </a>
   
@@ -384,26 +411,6 @@
   
 </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Docker/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Docker
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -435,37 +442,46 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#firewall" class="md-nav__link">
+  <a href="#build-the-image" class="md-nav__link">
     <span class="md-ellipsis">
-      Firewall
+      Build the image
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#reverse-proxy" class="md-nav__link">
+  <a href="#run-in-docker_1" class="md-nav__link">
     <span class="md-ellipsis">
-      Reverse Proxy
+      Run in Docker
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nginx-example-i" class="md-nav__link">
-    <span class="md-ellipsis">
-      NGINX Example I
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="NGINX Example I">
+    <nav class="md-nav" aria-label="Run in Docker">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#forward-all-calls-to-the-controlplane" class="md-nav__link">
+  <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Forward all calls to the Controlplane
+      Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-from-local-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run from local build
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-from-release-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run from release build
     </span>
   </a>
   
@@ -494,35 +510,46 @@
   
 
 
-<h1 id="deployment-architecture-ideas">Deployment Architecture Ideas</h1>
-<p><img alt="Firewal_Reverse_Proxy" src="../assets/ProxyAllControlplane.drawio.png" /></p>
-<h2 id="firewall">Firewall</h2>
-<p>The firewall restrics access to specific ports. Cloud vendors offer security groups to associate with services running in your vpc.</p>
-<p>You need to, at least, forward 443 to 8050 where your ControlPlane service is running.</p>
-<h2 id="reverse-proxy">Reverse Proxy</h2>
-<p>Use a reverse proxy to forward traffic to specific urls for the services. The reverse proxy also serves as your https endpoint where your SSL certificate resides. Get familiar with <a href="https://nginx.org/en/docs/">NGINX</a> to understand the configuration.</p>
-<h2 id="nginx-example-i">NGINX Example I</h2>
-<p>In this example I provide a file that would go into nginx /etc/nginx/servers directory. The nginx.conf file contains <code>include servers/*.conf</code></p>
-<h3 id="forward-all-calls-to-the-controlplane">Forward all calls to the Controlplane</h3>
-<p>controlplane.conf</p>
-<pre><code class="language-json">server {
-    listen 443 ssl;
-    server_name dataplane.somedomain.com;
-    proxy_intercept_errors on;
-
-    location / {
-        proxy_pass          http://controlplane.mydomain.com:8050;
-        client_max_body_size 100m;
-        proxy_set_header    Host               $host;
-        proxy_set_header    X-Real-IP          $remote_addr;
-        proxy_set_header    X-Forwarded-For    $proxy_add_x_forwarded_for;
-        proxy_set_header    X-Forwarded-Host   $host;
-        proxy_set_header    X-Forwarded-Server $host;
-        proxy_set_header    X-Forwarded-Port   $server_port;
-        proxy_set_header    X-Forwarded-Proto  $scheme;
-        proxy_set_header    Authorization  $http_authorization;
-    }
-}
+<h1 id="run-in-docker">Run in Docker</h1>
+<h2 id="build-the-image">Build the image</h2>
+<p>Run this commands from the project's root directory</p>
+<pre><code class="language-bash">docker build -t xformer/services -f docker/images/services.Dockerfile  .
+</code></pre>
+<h2 id="run-in-docker_1">Run in Docker</h2>
+<p>Run all services in a single Docker container.</p>
+<h3 id="configuration">Configuration</h3>
+<ol>
+<li>Make a copy of config.ini and secrets.txt</li>
+<li>Make note of the location of these files</li>
+<li>Create a directory to store the database</li>
+<li>Change the value of <code>dataplane_token</code> in secrets.txt</li>
+<li>Review the <a href="../CONFIG/">Config</a> documentation and change any required values</li>
+<li>At least, you must change db_url to <strong>db_url=sqlite+aiosqlite:////app/data.db</strong></li>
+</ol>
+<h3 id="run-from-local-build">Run from local build</h3>
+<p>Replace {PATH TO} with the location of your files and db directory</p>
+<pre><code class="language-bash">docker run --rm -v {PATH TO}/config.ini:/app/config.ini \
+-v {PATH TO}/secrets.txt:/app/secrets.txt \
+-v {PATH TO}/db:/app/db/ \
+-p 9000:9000 \
+-p 8050:8050 \
+-e APP_CONFIG_FILE=/app/config.ini \
+-e SERVICE=both \
+xformer/services
+</code></pre>
+<h3 id="run-from-release-build">Run from release build</h3>
+<ul>
+<li>Replace {PATH TO} with the location of your files and db directory</li>
+<li>Replace {TAG} with the image tag</li>
+</ul>
+<pre><code class="language-bash">docker run --rm -v {PATH TO}/config.ini:/app/config.ini \
+-v {PATH TO}/secrets.txt:/app/secrets.txt \
+-v {PATH TO}/db:/app/db/ \
+-p 9000:9000 \
+-p 8050:8050 \
+-e APP_CONFIG_FILE=/app/config.ini \
+-e SERVICE=both \
+marcelonyc/xformer:{TAG}
 </code></pre>
 
 
@@ -555,7 +582,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../CONFIG/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Config">
+          <a href="../ArchitectureSuggestions/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Architecture">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -565,27 +592,11 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Config
+                Architecture
               </div>
             </div>
           </a>
         
-        
-          
-          <a href="../Docker/" class="md-footer__link md-footer__link--next" aria-label="Next: Docker">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Docker
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
         
       </nav>
     

@@ -32,3 +32,4 @@ nav:
   - Home: README.md
   - Config: CONFIG.md
   - Architecture: ArchitectureSuggestions.md
+  - Docker: Docker.md
