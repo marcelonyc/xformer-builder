@@ -50,3 +50,8 @@ docker run --rm -v {PATH TO}/config.ini:/app/config.ini \
 -e SERVICE=both \
 marcelonyc/xformer:{TAG}
 ```
+
+## NOTES
+
+- Forwarding port 9000 is optional. That port is for the dataplane.
+- After starting the container, got to http://localhost:8050 
