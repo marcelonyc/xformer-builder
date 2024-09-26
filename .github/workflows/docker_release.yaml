@@ -27,11 +27,11 @@ jobs:
             push: true
             dockerfile: docker/image/services.Dockerfile
             context: .
-            tags: ${{ env.DOCKER_REPOSITORY }}/xformer:${{ github.ref_name }}
+            tags: ${{ vars.DOCKER_REPOSITORY }}/xformer:${{ github.ref_name }}
         - name: Build and push Docker image to Quay.io
           uses: docker/build-push-action@v2
           with:
             push: true
             dockerfile: docker/image/services.Dockerfile
             context: .
-            tags: quay.io/${{ env.QUAY_REPOSITORY }}/xformer:${{ github.ref_name }}
+            tags: quay.io/${{ vars.QUAY_REPOSITORY }}/xformer:${{ github.ref_name }}
