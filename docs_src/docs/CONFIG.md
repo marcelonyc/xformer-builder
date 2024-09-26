@@ -80,7 +80,7 @@ url=http://localhost:8050 <span style="color: green;"># URL of controlplane. We 
 
 ### background provider
 
-Background tasks execution provider. A class is defined in the application to handle background tasks. Currently on FastApi Backgroundtasks is implemented
+Background tasks execution provider. A class is defined in the application to handle background tasks. Currently, only FastApi Backgroundtasks is implemented
 
 [backgroundprovider]
 

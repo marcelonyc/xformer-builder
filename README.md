@@ -7,7 +7,11 @@ These project is evolving from learning about Dash to building an application us
 
 Enable your customers and partners to upload CSV/XLS files and transform them to match your internal data schemas. The platform provides the infrastructure and components to generate data transformers and unique URLs for users to upload their data. 
 
+Documentation: [Documentation](https://marcelonyc.github.io/xformer-builder)
+
 Questions: [Ask Here](https://github.com/marcelonyc/xformer-builder/labels/question)
+
+Do you want to run this in Docker?: [Docker Image](https://hub.docker.com/repository/docker/marcelonyc/xformer/general) 
 
 Live Demo: [Here](https://marcelonyc.pythonanywhere.com/)
 
@@ -28,10 +32,12 @@ To get started with Xformer Builder, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/marcelonyc/xformer-builder`
 2. Run setup.sh 
-    - Requires Python > 3.10 
-3. In one terminal run: `start-dev-dataplane.sh`
-4. In another terminal run: `start-dev-controlplane.sh`
-5. Access the application through your web browser at `http://localhost:8050`
+    - Requires Python > 3.10
+3. Note: a linux module is required and not installed by pip
+    - Install libmagic in your environment (`apk add libmagic` `apt-get install libmagic` )
+4. In one terminal run: `start-dev-dataplane.sh`
+5. In another terminal run: `start-dev-controlplane.sh`
+6. Access the application through your web browser at `http://localhost:8050`
 
 
 <div style="margin: auto; width: 80%;"><div class="table-responsive"><table class="table table-striped table-bordered table-hover"><tbody><tr><td><a href="https://marcelonyc.pythonanywhere.com/register">
