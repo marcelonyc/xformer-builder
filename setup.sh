@@ -40,7 +40,7 @@ if [ $? -ne 0 ]; then
 fi
 
 log_task "Copying ACE editor files"
-cp ace-builds/src-noconflict/* ${ASSETS_DIR}/src-noconflict/.  > /dev/null 2>&1
+cp ace-builds/src-noconflict/*.js ${ASSETS_DIR}/src-noconflict/.  > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     log_error "Failed to copy ACE editor files"
     exit 1
