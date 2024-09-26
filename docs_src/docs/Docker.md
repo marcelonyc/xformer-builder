@@ -2,7 +2,7 @@
 
 ## Build the image
 
-Run this commands from the project's root directory
+Run these commands from the project's root directory
 
 ```bash
 docker build -t xformer/services -f docker/images/services.Dockerfile  .
