@@ -18,7 +18,7 @@ Run all services in a single Docker container.
 2. Create a directory to store the database
 3. Change the value of `dataplane_token` in secrets.txt
 4. Review the [Config](CONFIG.md) documentation and change any required values
-   - At least, you must change db_url to **db_url=sqlite+aiosqlite:////app/data.db**
+   - At least, you must change db_url to **db_url=sqlite+aiosqlite:////app/db/data.db**
 
 ### Run from local build
 
