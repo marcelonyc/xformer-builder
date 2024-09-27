@@ -13,7 +13,7 @@ register_page(__name__, name="Login", top_nav=True)
 # Button to save code. Uses editor_element_index to identify editor
 
 
-def layout(status: str = None):
+def layout(status: str = None, **kwargs):
 
     placeholder = "Enter your Application Token"
     if status == "invalid_token":

@@ -50,7 +50,7 @@ def layout(new_xformer: bool = True):
             "class": "fa-solid fa-link fa-xl",
             "href": "/associate-xformer",
             "text": "Associate a transformer with a file upload. "
-            "This steps generastes a unique URL for the file upload",
+            "This steps generates a unique URL for the file upload",
         },
         {
             "number": "fa-solid fa-5 fa-xl",
