@@ -8,10 +8,8 @@
       
       
       
-        <link rel="canonical" href="https://marcelonyc.github.io/xformer-builder/Docker/">
+        <link rel="canonical" href="https://marcelonyc.github.io/xformer-builder/REGISTRY_DOC/">
       
-      
-        <link rel="prev" href="../ArchitectureSuggestions/">
       
       
       
@@ -20,7 +18,7 @@
     
     
       
-        <title>Docker - Data Onboarding</title>
+        <title>Data Onboarding - transformer builder - Data Onboarding</title>
       
     
     
@@ -72,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#run-in-docker" class="md-skip">
+        <a href="#data-onboarding-transformer-builder" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Docker
+              Data Onboarding - transformer builder
             
           </span>
         </div>
@@ -308,30 +306,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Docker
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../Docker/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -340,86 +318,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#build-the-image" class="md-nav__link">
-    <span class="md-ellipsis">
-      Build the image
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#run-in-docker_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run in Docker
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Run in Docker">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-from-local-build" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run from local build
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-from-release-build" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run from release build
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      NOTES
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -451,25 +349,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#build-the-image" class="md-nav__link">
+  <a href="#sample-transform-map-and-simplify-you-data-exchanges" class="md-nav__link">
     <span class="md-ellipsis">
-      Build the image
+      Sample, transform, map and simplify you data exchanges
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#run-in-docker_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run in Docker
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Run in Docker">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       Configuration
@@ -477,34 +365,11 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#run-from-local-build" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run from local build
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#run-from-release-build" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run from release build
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
       
         <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
+  <a href="#run-both-services-in-one-container" class="md-nav__link">
     <span class="md-ellipsis">
-      NOTES
+      Run both services in one container
     </span>
   </a>
   
@@ -528,14 +393,13 @@
   
 
 
-<h1 id="run-in-docker">Run in Docker</h1>
-<h2 id="build-the-image">Build the image</h2>
-<p>Run these commands from the project's root directory</p>
-<pre><code class="language-bash">docker build -t xformer/services -f docker/images/services.Dockerfile  .
-</code></pre>
-<h2 id="run-in-docker_1">Run in Docker</h2>
-<p>Run all services in a single Docker container.</p>
-<h3 id="configuration">Configuration</h3>
+<h1 id="data-onboarding-transformer-builder">Data Onboarding - transformer builder</h1>
+<h2 id="sample-transform-map-and-simplify-you-data-exchanges">Sample, transform, map and simplify you data exchanges</h2>
+<p>Enable your customers and partners to upload CSV/XLS files and transform them to match your internal data schemas. The platform provides the infrastructure and components to generate data transformers and unique URLs for users to upload their data.</p>
+<p><img alt="Flow" src="https://marcelonyc.github.io/xformer-builder/assets/ApplicationFlow.drawio.png" /></p>
+<p>Please read the <a href="https://marcelonyc.github.io/xformer-builder">documentation</a> for more details </p>
+<p>Clone the <a href="https://github.com/marcelonyc/xformer-builder">GitHub</a> repository for additional capabilities and the latest dev versions. </p>
+<h2 id="configuration">Configuration</h2>
 <ol>
 <li>Make a copy of config.ini and secrets.txt<ul>
 <li>Clone the GitHub repository or download config.ini and secrets.txt from the repo</li>
@@ -548,21 +412,10 @@
 <li>Change app_cfg - db_url to <strong>db_url=sqlite+aiosqlite:////app/db/data.db</strong></li>
 <li>Change fileprovider - path to /app/data</li>
 </ol>
-<h3 id="run-from-local-build">Run from local build</h3>
-<p>Replace {PATH TO} with the location of your files and db directory</p>
-<pre><code class="language-bash">docker run --rm -v {PATH TO}/config.ini:/app/config.ini \
--v {PATH TO}/secrets.txt:/app/secrets.txt \
--v {PATH TO}/db:/app/db/ \
--p 9000:9000 \
--p 8050:8050 \
--e APP_CONFIG_FILE=/app/config.ini \
--e SERVICE=both \
-xformer/services
-</code></pre>
-<h3 id="run-from-release-build">Run from release build</h3>
+<h2 id="run-both-services-in-one-container">Run both services in one container</h2>
 <ul>
-<li>Replace {PATH TO} with the location of your files and db directory</li>
-<li>Replace {TAG} with the image tag</li>
+<li>Change {PATH TO} to the path of your files. You must set, config, secrets, db and data locations. </li>
+<li>Set the {TAG} to the version you want to deploy (Check the Github repository to release notes)</li>
 </ul>
 <pre><code class="language-bash">docker run --rm -v {PATH TO}/config.ini:/app/config.ini \
 -v {PATH TO}/secrets.txt:/app/secrets.txt \
@@ -572,13 +425,13 @@ xformer/services
 -p 8050:8050 \
 -e APP_CONFIG_FILE=/app/config.ini \
 -e SERVICE=both \
-marcelonyc/xformer:{TAG}
+quay.io/marcelonyc/xformer:{TAG}
 </code></pre>
-<h2 id="notes">NOTES</h2>
-<ul>
-<li>Forwarding port 9000 is optional. That port is for the dataplane.</li>
-<li>After starting the container, got to http://localhost:8050 </li>
-</ul>
+<hr />
+<p><strong>Note:</strong></p>
+<p>9000 is the dataplane port. It is optional to expose it</p>
+<hr />
+<p>If the services start successfully, go to http://localhost:8050 on your browser.</p>
 
 
 
@@ -605,28 +458,6 @@ marcelonyc/xformer:{TAG}
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../ArchitectureSuggestions/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Architecture">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Architecture
-              </div>
-            </div>
-          </a>
-        
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">

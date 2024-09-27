@@ -14,12 +14,13 @@ Run all services in a single Docker container.
 
 ### Configuration
 1. Make a copy of config.ini and secrets.txt
-   - Make note of the location of these files
-2. Create a directory to store the database
-3. Change the value of `dataplane_token` in secrets.txt
-4. Review the [Config](CONFIG.md) documentation and change any required values
-   - At least, you must change db_url to **db_url=sqlite+aiosqlite:////app/db/data.db**
-
+    - Clone the GitHub repository or download config.ini and secrets.txt from the repo
+2. Change the dataplane_token secret (in secrets.txt)
+3. Create a directory for the database
+4. Create a directory to save your files
+5. Review the [Config](https://marcelonyc.github.io/xformer-builder/CONFIG/) documentation and change any required values
+   - Change app_cfg - db_url to **db_url=sqlite+aiosqlite:////app/db/data.db**
+   - Change fileprovider - path to /app/data
 ### Run from local build
 
 Replace {PATH TO} with the location of your files and db directory
@@ -44,6 +45,7 @@ xformer/services
 docker run --rm -v {PATH TO}/config.ini:/app/config.ini \
 -v {PATH TO}/secrets.txt:/app/secrets.txt \
 -v {PATH TO}/db:/app/db/ \
+-v {PATH TO}/data:/app/data \
 -p 9000:9000 \
 -p 8050:8050 \
 -e APP_CONFIG_FILE=/app/config.ini \
