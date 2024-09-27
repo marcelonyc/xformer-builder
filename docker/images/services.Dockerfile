@@ -1,5 +1,6 @@
 FROM python:3.10.15-alpine3.20 as base
 RUN apk update && apk add git bash libmagic
+RUN python -m pip install --upgrade pip==23.3
 RUN adduser xformer -D
 ENV ASSETS_DIR=/app/controlplane/src/assets
 ENV ACE_TEMP_DIR=/temp_ace/
