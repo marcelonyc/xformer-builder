@@ -40,7 +40,7 @@ def create_footer():
                                             className="fa-brands fa-docker"
                                         ),
                                     ],
-                                    href="https://hub.docker.com/repository/docker/marcelonyc/xformer/general",
+                                    href="https://hub.docker.com/r/marcelonyc/xformer",
                                     target="_blank",
                                 )
                             ),
