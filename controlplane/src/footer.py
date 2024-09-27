@@ -15,9 +15,32 @@ def create_footer():
                     dbc.Nav(
                         [
                             dbc.NavItem(
+                                html.I("This is an Open Source Project: ")
+                            ),
+                            dbc.NavItem(
                                 dbc.NavLink(
                                     "GitHub Repository",
                                     href="https://github.com/marcelonyc/xformer-builder",
+                                    target="_blank",
+                                )
+                            ),
+                            dbc.NavItem(
+                                dbc.NavLink(
+                                    "Documentation",
+                                    href="https://marcelonyc.github.io/xformer-builder",
+                                    target="_blank",
+                                )
+                            ),
+                            dbc.NavItem(
+                                dbc.NavLink(
+                                    [
+                                        "Run in Docker",
+                                        html.I(" - "),
+                                        html.I(
+                                            className="fa-brands fa-docker"
+                                        ),
+                                    ],
+                                    href="https://hub.docker.com/repository/docker/marcelonyc/xformer/general",
                                     target="_blank",
                                 )
                             ),

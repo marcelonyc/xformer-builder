@@ -167,8 +167,6 @@ def update_authentication_status(path, n):
         ### if page is restricted, redirect to login and save path
         if path in restricted_page:
             session["url"] = path
-
-            # return dcc.Link("login", href="/login"), "/login", ""
             return login_nav, "/login", ""
 
     ### if path not login and logout display login link
