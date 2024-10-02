@@ -13,3 +13,7 @@ scrap/
 test.py
 controlplane/filestoreprovider/test.py
 controlplane/src/assets/src-noconflict
+controlplane/src/assets/src-min
+modules/build
+modules/dist
+modules/python_modules.egg-info
