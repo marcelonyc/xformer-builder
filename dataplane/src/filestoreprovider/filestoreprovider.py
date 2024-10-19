@@ -18,6 +18,12 @@ class FileStoreProviderFactory:
                 required_directory=config["fileprovider"]["path"],
             )
             return _provider
+        elif config["fileprovider"]["type"] == "s3":
+            _provider = s3provider.S3Provider(
+                config=config
+            )
+            return _provider
+        
         # elif provider == "gdrive":
         #     return gdriveprovider.GDriveProvider()
         # elif provider == "s3":

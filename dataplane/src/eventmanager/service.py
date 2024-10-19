@@ -61,17 +61,21 @@ class EventTriggerInvoke:
         # Success trigger
         _sucess_trigger_meta = get_event_trigger_by_id(self.success_trigger_id)
 
+        if _sucess_trigger_meta is None:
+            return
+        
         if _sucess_trigger_meta.event_type == "webhook":
             _payload = WebhookEventMetadata(**_sucess_trigger_meta.event_meta)
             invoke_webhook_event(_payload, payload)
-        else:
-            pass
+
 
     def send_failed_trigger(self, payload: dict = {}):
         _failed_trigger_meta = get_event_trigger_by_id(self.failed_trigger_id)
-
+        
+        if _failed_trigger_meta is None:
+            return
+        
         if _failed_trigger_meta.event_type == "webhook":
             _payload = WebhookEventMetadata(**_failed_trigger_meta.event_meta)
             invoke_webhook_event(_payload, payload)
-        else:
-            pass
+

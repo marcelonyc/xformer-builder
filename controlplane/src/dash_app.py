@@ -48,7 +48,7 @@ def login_button_click():
 suppress_callback_exceptions = True
 
 app = dash.Dash(
-    __name__,
+    "Data OnBoarding. CSV Files",
     use_pages=True,
     server=server,
     external_stylesheets=external_stylesheets,
