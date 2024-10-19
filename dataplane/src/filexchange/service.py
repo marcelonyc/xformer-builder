@@ -95,7 +95,6 @@ def process_file(file_id: str, upload_id: str, filename: str):
         _user_id_result[0]["failed_event_trigger_id"],
     )
 
-    _, file_extension = os.path.splitext(filename)
     process_file_status(
         file_id,
         upload_id,
@@ -122,7 +121,7 @@ def process_file(file_id: str, upload_id: str, filename: str):
 
     try:
         file_df = filestoreprovider.get_file(
-            file_id, upload_id, file_extension
+            file_id, upload_id, False
         )
     except Exception as e:
         error_dict["msg"] = "Could not fetch file"
