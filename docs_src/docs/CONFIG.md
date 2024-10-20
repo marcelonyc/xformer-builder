@@ -65,14 +65,20 @@ File storage provider. Classes for each provider type are defined in the applica
 
 `type`: Provider class. Options: localfs, s3
 
-**LOCLAFS options**
+**LOCALFS options**
+
 path=/tmp/data <span style="color: green;"># Path to store files</span>
 
 **S3 options**
+
 bucket=s3://mybucket  <span style="color: green;"># S3 Bucket name</span>
+
 endpoint_url=http://localhost:9000  <span style="color: green;"># Set if not using a standard AWS endpoint</span>
+
 region=us-west-1  <span style="color: green;"># Required for some providers</span>
+
 access_key_id=${vault:access_key_id}  <span style="color: green;"># Access Key stored in a vault provider</span>
+
 secret_access_key=${vault:secret_access_key}  <span style="color: green;"># Secret stored in a vault provider</span>
 
 ### dataplane
