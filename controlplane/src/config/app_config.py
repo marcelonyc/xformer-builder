@@ -51,6 +51,8 @@ class AppConfig:
 
         self.dataplane_token = self.vaultprovider.get_secret("dataplane_token")
         self.controlplane_url = config.get("controlplane", "url")
+        self.smtp_enabled =  config.getboolean("smtp", "enabled")
+
 
     def parse_vault_secrets(self, config: ConfigParser) -> ConfigParser:
         for section in config.sections():
