@@ -5,9 +5,12 @@ from dash import (
     register_page,
 )
 import code_editor.editor as editor_utils
+from config.app_config import get_settings
 
 
 register_page(__name__, name="Login", top_nav=True)
+
+app_config = get_settings()
 
 
 # Button to save code. Uses editor_element_index to identify editor
@@ -19,6 +22,15 @@ def layout(status: str = None, **kwargs):
     if status == "invalid_token":
         placeholder = "INVALID TOKEN. Enter your Application Token"
 
+    if app_config.smtp_enabled:
+        enable_token_recovery = dbc.NavLink(
+                    "Forgot your token? Click here to reset it",
+                    href="/forgot_token",
+                    target="_blank",
+                )
+    else:
+        enable_token_recovery = html.Div()
+        
     app_token_input = [
         dbc.Label("Application Token", html_for="app-token"),
         dbc.Input(
@@ -35,11 +47,7 @@ def layout(status: str = None, **kwargs):
                     href="/register",
                     target="_blank",
                 ),
-                dbc.NavLink(
-                    "Forgot your token? Click here to reset it",
-                    href="/forgot_token",
-                    target="_blank",
-                ),
+                enable_token_recovery,
             ],
             color="secondary",
         ),

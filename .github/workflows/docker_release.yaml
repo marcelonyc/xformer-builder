@@ -21,13 +21,25 @@ jobs:
             registry: quay.io
             username: ${{ secrets.QUAY_USERNAME }}
             password: ${{ secrets.QUAY_PASSWORD }}
+        - name: Check if dev branch
+          if: ${{ contains(github.ref, 'dev') }}
+          id: check_dev_branch
+          run: echo "Dev branch"
+          env:
+            IMG_PREFIX: "dev-"
+        - name: Check if main branch
+          if: ${{ contains(github.ref, 'main') }}
+          id: check_main_branch
+          run: echo "Main branch"
+          env:
+            IMG_PREFIX: ""
         - name: Build and push Docker image to Docker Hub
           uses: docker/build-push-action@v2
           with:
             push: true
             file: docker/images/services.Dockerfile
             context: .
-            tags: ${{ vars.DOCKER_REPOSITORY }}/xformer:${{ github.ref_name }}, ${{ vars.DOCKER_REPOSITORY }}/xformer:latest
+            tags: ${{ vars.DOCKER_REPOSITORY }}/xformer:${{ env.IMG_PREFIX }}${{ github.ref_name }}, ${{ vars.DOCKER_REPOSITORY }}/xformer:latest
         - name: Build and push Docker image to Quay.io
           uses: docker/build-push-action@v2
           with:
