@@ -46,7 +46,7 @@ To get started with Xformer Builder, follow these steps:
 
 Try it in the demo environment: [Demo](https://xformer.marcelonyc.com)
 
-Suggestions for deployment architecture: [Here](docs/ArchitectureSuggestions.md)
+Suggestions for deployment architecture: [Here](https://marcelonyc.github.io/xformer-builder/ArchitectureSuggestions/)
 
 
 ## Create a transformer
@@ -70,7 +70,7 @@ Suggestions for deployment architecture: [Here](docs/ArchitectureSuggestions.md)
 The transformer is saved into multiple lists. Right now is just a print to the console. The actual code is base64 encoded.
 
 ## Application Configuration
-To customize the application configuration, review the [CONFIG.INI](docs/CONFIG.md) document
+To customize the application configuration, review the [CONFIG.INI](https://marcelonyc.github.io/xformer-builder/CONFIG/) document
 
 ## Contributing
 
