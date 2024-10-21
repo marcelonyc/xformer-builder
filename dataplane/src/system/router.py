@@ -71,12 +71,9 @@ async def get_list_of_uploaded_files(
 
     _files_response = []
     for file in _files:
-        background_tasks.add_task(
-            delete_expired_files,
-            file["file_id"],
-            file["upload_id"],
-        )
         _files_response.append(json_object_converter(file))
+
+    background_tasks.add_task(delete_expired_files, _files_response)
 
     return JSONResponse(
         content={"files": _files_response},

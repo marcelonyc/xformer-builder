@@ -8,7 +8,6 @@ import io
 import logging
 
 
-
 class S3Provider(FileStoreProvider):
     type = "s3provider"
 
@@ -16,7 +15,9 @@ class S3Provider(FileStoreProvider):
         super().__init__()
         self.required_provider_type = "s3"
         self.required_aws_key = config.get("fileprovider", "access_key_id")
-        self.required_aws_secret = config.get   ("fileprovider", "secret_access_key")
+        self.required_aws_secret = config.get(
+            "fileprovider", "secret_access_key"
+        )
         self.required_bucket = config.get("fileprovider", "bucket")
         self.required_region = config.get("fileprovider", "region")
         self.required_endpoint = config.get("fileprovider", "endpoint_url")
@@ -36,38 +37,40 @@ class S3Provider(FileStoreProvider):
                 region_name=self.required_region,
             )
 
-
     def Target(self, upload_id: str, file_id: str) -> S3Target:
-        return S3Target(f"{self.required_bucket}/{upload_id}.{file_id}",
-                        mode='wb',
-                        transport_params={'client': self.s3client})        
+        return S3Target(
+            f"{self.required_bucket}/{upload_id}.{file_id}",
+            mode="wb",
+            transport_params={"client": self.s3client},
+        )
 
-    def put_file(self,
+    def put_file(
+        self,
         file_id: str,
         upload_id: str,
         stream: io.StringIO,
-        is_transformed: bool = True,):
+        is_transformed: bool = True,
+    ):
         if is_transformed:
             transformed_extension = ".transformed"
         else:
             transformed_extension = ""
-        
-        file_name = f"{upload_id}.{file_id}{transformed_extension}"    
-    
+
+        file_name = f"{upload_id}.{file_id}{transformed_extension}"
+
         try:
-            self.s3client.upload_fileobj(io.BytesIO(stream.getvalue().encode("utf-8")),
-                                  self.required_bucket.replace("s3://", ""),
-                                  file_name
-                                  )
+            self.s3client.upload_fileobj(
+                io.BytesIO(stream.getvalue().encode("utf-8")),
+                self.required_bucket.replace("s3://", ""),
+                file_name,
+            )
         except Exception as e:
             logging.error(f"Error uploading file: {e}")
             raise Exception("Error uploading file")
 
-
-    def get_file(self,
-        file_id: str,
-        upload_id: str,
-        is_transformed: bool = False) -> pd.DataFrame:
+    def get_file(
+        self, file_id: str, upload_id: str, is_transformed: bool = False
+    ) -> pd.DataFrame:
         if is_transformed:
             transformed_extension = ".transformed"
         else:
@@ -75,13 +78,15 @@ class S3Provider(FileStoreProvider):
         file_stream = io.BytesIO()
         file_name = f"{upload_id}.{file_id}{transformed_extension}"
         try:
-            self.s3client.download_fileobj(self.required_bucket.replace("s3://", ""),
-                                    file_name,
-                                    file_stream)
+            self.s3client.download_fileobj(
+                self.required_bucket.replace("s3://", ""),
+                file_name,
+                file_stream,
+            )
         except Exception as e:
             logging.error(f"Error downloading file: {e}")
             raise Exception("Error downloading file")
-        
+
         try:
             m = magic.from_buffer(file_stream.getvalue())
         except Exception as e:
@@ -110,5 +115,25 @@ class S3Provider(FileStoreProvider):
             raise Exception("File format not supported")
 
         return df
-        
-        
+
+    def delete_file(self, file_id: str, upload_id: str):
+
+        file_name = f"{upload_id}.{file_id}"
+
+        def _delete_file(file_name):
+            try:
+                self.s3client.delete_object(
+                    Bucket=self.required_bucket.replace("s3://", ""),
+                    Key=file_name,
+                    # Delete={
+                    #     "Objects": [
+                    #         {"Key": file_name},
+                    #     ],
+                    #     "Quiet": False,
+                    # },
+                )
+            except FileNotFoundError:
+                pass
+
+        _delete_file(file_name)
+        _delete_file(f"{file_name}.transformed")
