@@ -22,3 +22,4 @@ setuptools==70.0.0
 boto3==1.35.43
 google-api-python-client==2.149.0
 ./modules
+pydantic==2.9.2
