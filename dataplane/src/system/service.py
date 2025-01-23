@@ -5,18 +5,25 @@ from database import database, file_manager
 import logging
 
 
-def delete_expired_files(file_id: str, upload_id: str):
+def delete_expired_files(files_list: list) -> bool:
 
-    delete_query = (
-        delete(file_manager)
-        .where(file_manager.c.file_id == file_id)
-        .where(file_manager.c.upload_id == upload_id)
-    )
-    try:
-        database.execute_sync(delete_query)
-    except Exception as e:
-        logging.error("Could not delete file_manager entry {e}".format(e=e))
+    for file in files_list:
+        file_id = file["file_id"]
+        upload_id = file["upload_id"]
 
-    get_settings().filestoreprovider.delete_file(file_id, upload_id)
+        delete_query = (
+            delete(file_manager)
+            .where(file_manager.c.file_id == file_id)
+            .where(file_manager.c.upload_id == upload_id)
+        )
+        try:
+            database.execute_sync(delete_query)
+        except Exception as e:
+            logging.error("Could not delete file_manager entry")
 
-    pass
+        try:
+            get_settings().filestoreprovider.delete_file(file_id, upload_id)
+        except Exception as e:
+            logging.error("Could not delete file")
+
+    return True
