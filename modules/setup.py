@@ -14,7 +14,7 @@ setup(
     description="Modules used in api and Dashboard",
     packages=find_packages(),
     install_requires=[
-        "RestrictedPython==7.3"
+        "RestrictedPython==8.0"
     ],  # add any additional packages that
     # needs to be installed along with your package. Eg: 'caer'
     keywords=["python", "code", "validator", "transformer"],
