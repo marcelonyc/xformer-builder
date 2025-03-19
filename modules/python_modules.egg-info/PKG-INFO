@@ -1,4 +1,4 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: python_modules
 Version: 0.2
 Summary: Modules used in api and Dashboard
@@ -9,3 +9,9 @@ Classifier: Development Status :: 1 - Prod
 Classifier: Intended Audience :: Open Source Developers
 Classifier: Programming Language :: Python :: 3
 Requires-Dist: RestrictedPython==8.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: keywords
+Dynamic: requires-dist
+Dynamic: summary

@@ -6,7 +6,7 @@ Enable your customers and partners to upload CSV/XLS files and transform them to
 
 Questions: [Ask Here](https://github.com/marcelonyc/xformer-builder/labels/question)
 
-Live Demo: [Here](https://xformer.marcelonyc.com/)
+<!-- Live Demo: [Here](https://xformer.marcelonyc.com/) -->
 
 ## Features
 
@@ -34,7 +34,7 @@ To get started with Xformer Builder, follow these steps:
 ![Getting Started](assets/getting-started.png)
 
 
-Try it in the demo environment: [Demo](https://xformer.marcelonyc.com)
+<!-- Try it in the demo environment: [Demo](https://xformer.marcelonyc.com) -->
 
 Suggestions for deployment architecture: [Here](ArchitectureSuggestions.md)
 
