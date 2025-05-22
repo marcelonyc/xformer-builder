@@ -17,3 +17,4 @@ controlplane/src/assets/src-min
 modules/build
 modules/dist
 modules/python_modules.egg-info
+modules/python_modules.egg-info/PKG-INFO

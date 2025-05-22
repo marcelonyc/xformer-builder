@@ -13,7 +13,6 @@ Questions: [Ask Here](https://github.com/marcelonyc/xformer-builder/labels/quest
 
 Do you want to run this in Docker?: [Docker Image](https://hub.docker.com/repository/docker/marcelonyc/xformer/general) 
 
-Live Demo: [Here](https://xformer.marcelonyc.com/)
 
 ## Features
 
