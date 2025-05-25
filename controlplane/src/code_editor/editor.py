@@ -32,7 +32,41 @@ def editor_div(
     }
     return html.Div(
         [
-            dbc.Row(dbc.Col(html.H2(editor_title, id="editor-title"))),
+            dbc.Popover(
+                [
+                    dbc.PopoverHeader("Coding Guidelines"),
+                    dbc.PopoverBody(
+                        [
+                            "Create transformers: Use the ACE code editor to create transformers for each column. Ensure that the code adheres to the restricted Python guidelines.",
+                            "data",
+                            " as the variable containing the source data.",
+                            "Use the dictionary",
+                            "columns[]",
+                            " to get values from other columns",
+                            "Examples:",
+                            " * data / 1000",
+                            " * data.split('-')",
+                            " * data * columns['other_data']",
+                        ]
+                    ),
+                ],
+                target="editor-help-icon",
+                id="editor-help-icon-popover",
+                body=True,
+                placement="top",
+                trigger="hover",
+            ),
+            dbc.Row(
+                [
+                    dbc.Col(html.H2(editor_title, id="editor-title")),
+                    # dbc.Col(
+                    #     html.H2(
+                    #         className="fa-solid fa-question fa-xl",
+                    #         id="editor-help-icon",
+                    #     )
+                    # ),
+                ],
+            ),
             dbc.Row(
                 dbc.Col(
                     html.Div(
@@ -62,6 +96,14 @@ def editor_div(
                         dbc.Button(
                             "Test",
                             id=editor_test_button,
+                            style=button_style,
+                        ),
+                        align="left",
+                    ),
+                    dbc.Col(
+                        dbc.Button(
+                            "?",
+                            id="editor-help-icon",
                             style=button_style,
                         ),
                         align="left",

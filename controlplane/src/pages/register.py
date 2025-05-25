@@ -42,7 +42,7 @@ def layout(status: str = None):
         is_open=False,
     )
     register_input = [
-        dbc.Label("Full Name", html_for=register_input_name),
+        dbc.Label("Full Name *", html_for=register_input_name),
         dbc.Input(
             id=register_input_name,
             type="text",
@@ -51,7 +51,7 @@ def layout(status: str = None):
             name="name",
             placeholder="Full Name",
         ),
-        dbc.Label("Email", html_for=register_input_name),
+        dbc.Label("Email *", html_for=register_input_name),
         dbc.Input(
             id=register_input_email,
             type="email",
@@ -61,11 +61,12 @@ def layout(status: str = None):
             name="name",
             placeholder="Email",
         ),
-        dbc.Label("Tell us about you", html_for=register_input_name),
+        dbc.Label("Tell us about you *", html_for=register_input_name),
         dbc.Textarea(
             id=register_input_description,
             maxlength=360,
             name="description",
+            required=True,
         ),
     ]
 
@@ -80,6 +81,9 @@ def layout(status: str = None):
     form_layout = dbc.Form(
         register_input
         + register_button_input
+        + [
+            "* indicates required fields",
+        ]
         + [
             dbc.Label(id="registered-output-state", children=""),
             register_modal_object,
