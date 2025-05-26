@@ -10,7 +10,7 @@ Questions: [Ask Here](https://github.com/marcelonyc/xformer-builder/labels/quest
 
 ## Features
 
-- Upload CSV/XLS file: Users can easily upload their desired CSV/XLS file through the user interface.
+- Upload CSV/XLS file: Users can easily upload a CSV/XLS file through the user interface.
 - Column transformers: The project allows users to create transformers for each column using the ACE code editor.
 - Restricted Python: The data transformer utilizes restricted Python to ensure secure and controlled data manipulation.
 - Share a unique URL to upload/download files
@@ -40,7 +40,7 @@ Suggestions for deployment architecture: [Here](ArchitectureSuggestions.md)
 
 ## Create a transformer
 
-1. Upload CSV/XLS file: Click on "Upload Sample CSV/XLS file" and select the desired CSV/XLS file from your local machine.
+1. Upload CSV/XLS file: Click on "Upload Sample CSV/XLS file" and select a CSV/XLS file from your local machine.
 2. Create transformers: Use the ACE code editor to create transformers for each column. Ensure that the code adheres to the restricted Python guidelines.
     - Use `data` as the variable containing the source data.
     - Use the dictionary `columns[]` to get values from other columns
@@ -51,12 +51,10 @@ Suggestions for deployment architecture: [Here](ArchitectureSuggestions.md)
 3. Test transformations: Once the transformers are created, click on the "Test" button to execute the transformations.
     - The result displays on the column's row. You need to [expand](#expand-row-to-see-transformation-resutls) it.
     - Any errors will display in the column's row
-4. When you are finished, Name the transformer
-5. Test all the transformers from the navigation bar
+4. When you are finished, Name the transformer. 
+5. Test all the transformers from the navigation bar. (:runner:)
 6. Save transformers
-    - The output goes to the console
 
-The transformer is saved into multiple lists. Right now is just a print to the console. The actual code is base64 encoded.
 
 ## Application Configuration
 To customize the application configuration, review the [CONFIG.INI](CONFIG.md) document

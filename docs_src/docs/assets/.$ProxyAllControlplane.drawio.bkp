@@ -49,7 +49,7 @@
         <mxCell id="oQbVbkL-_QKkp-6BVC7q-4" value="&lt;h3&gt;Internet&lt;/h3&gt;" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;spacingTop=3;image=img/lib/active_directory/internet_cloud.svg;" vertex="1" parent="1">
           <mxGeometry x="30" y="225" width="50" height="31.5" as="geometry" />
         </mxCell>
-        <mxCell id="oQbVbkL-_QKkp-6BVC7q-18" value="&lt;h2&gt;Expose only ControlPlan&lt;/h2&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="oQbVbkL-_QKkp-6BVC7q-18" value="&lt;h2&gt;Expose ControlPlane&lt;/h2&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="190" y="110" width="300" height="30" as="geometry" />
         </mxCell>
       </root>
