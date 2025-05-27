@@ -33,3 +33,4 @@ nav:
   - Config: CONFIG.md
   - Architecture: ArchitectureSuggestions.md
   - Docker: Docker.md
+  - License: LICENSE.md
