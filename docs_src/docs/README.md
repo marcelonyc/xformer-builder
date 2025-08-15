@@ -1,6 +1,9 @@
 # Data Onboarding - transformer builder
 ## Sample, transform, map and simplify you data exchanges
 
+<video controls>
+    <source src="assets/Xformer_Builder__Simplify_Data_Onboarding.mp4" type="video/mp4">
+</video>
 
 Enable your customers and partners to upload CSV/XLS files and transform them to match your internal data schemas. The platform provides the infrastructure and components to generate data transformers and unique URLs for users to upload their data. 
 
