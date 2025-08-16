@@ -3,7 +3,7 @@
 
 **Watch Explainer Video**
 
-[![Explainer Video](https://i9.ytimg.com/vi_webp/Z95N4_Mo4is/mq1.webp?sqp=CNSw_cQG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGQgZChkMA8=&rs=AOn4CLBS_nhoe9F9amsBhJDec2qWKVFwcw)](https://youtu.be/Z95N4_Mo4is)
+[![Explainer Video](assets/video_clip.png)](https://youtu.be/Z95N4_Mo4is)
 
 Enable your customers and partners to upload CSV/XLS files and transform them to match your internal data schemas. The platform provides the infrastructure and components to generate data transformers and unique URLs for users to upload their data. 
 
